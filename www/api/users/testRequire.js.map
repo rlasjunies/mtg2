@@ -1,0 +1,1 @@
+{"version":3,"sources":["users/testRequire.ts"],"names":["essai"],"mappings":";;;;;;;;IAAA,eAAe,QAAe;QAC7BA,MAAMA,CAACA,oBAAkBA,QAAUA,CAACA;IACrCA,CAACA;IACO,aAAK,SADZ;IACc","file":"users/testRequire.js","sourcesContent":["function essai(mystring:string):string{\r\n\treturn `value received:${mystring}`;\r\n}\r\nexport {essai};"],"sourceRoot":"/source/"}
