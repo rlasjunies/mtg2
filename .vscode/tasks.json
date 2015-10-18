@@ -1,0 +1,70 @@
+// Available variables which can be used inside of strings.
+// ${workspaceRoot}: the root folder of the team
+// ${file}: the current opened file
+// ${fileBasename}: the current opened file's basename
+// ${fileDirname}: the current opened file's dirname
+// ${fileExtname}: the current opened file's extension
+// ${cwd}: the current working directory of the spawned process
+
+
+{
+	"version": "0.1.0",
+	"command": "gulp",
+	"isShellCommand": true,
+
+	"tasks": [
+		{
+			"taskName": "build",
+			"isBuildCommand": true,
+			"showOutput": "silent",
+			"problemMatcher": "$tsc"
+		},
+		{
+			"taskName": "watchWeb",
+			"isBuildCommand": true,
+			"showOutput": "silent",
+			"problemMatcher": "$tsc"
+		},
+		{
+			"taskName": "lint",
+			"showOutput": "silent",
+			"problemMatcher": {
+				"owner": "gulp-tslint",
+				"fileLocation": ["relative", "${workspaceRoot}/src/"],
+
+				// The actual pattern to match problems in the output.
+				"pattern": {
+					// The regular expression. Matches HelloWorld.ts(2,10): error TS2339: Property 'logg' does not exist on type 'Console'.
+					//"regexp": "^>> ([^\\s].*)\\[(\\d+|\\d+,\\s*\\d+|\\d+,\\d+,\\d+,\\d+)\\]:\\s*(.*)$",
+					"regexp": "^\\s*\\[\\d+\\:\\d+\\:\\d+\\]\\s*\\[gulp-tslint\\]\\s*(error|warning)\\s*(.*)\\[(\\d+)\\,\\s*(\\d+)\\]\\:\\s*(.*)$",
+					"file": 2,
+					"line": 3,
+					"column" : 4,
+					"message": 5,
+					"severity" : 1
+				}
+			}
+		},
+		{
+			"taskName": "watch",
+			"showOutput": "always",
+			"problemMatcher": {
+				"owner": "gulp-tslint",
+				"fileLocation": ["relative", "${workspaceRoot}/src/"],
+
+				// The actual pattern to match problems in the output.
+				"pattern": {
+					// The regular expression. Matches HelloWorld.ts(2,10): error TS2339: Property 'logg' does not exist on type 'Console'.
+					//"regexp": "^>> ([^\\s].*)\\[(\\d+|\\d+,\\s*\\d+|\\d+,\\d+,\\d+,\\d+)\\]:\\s*(.*)$",
+					"regexp": "^\\s*\\[\\d+\\:\\d+\\:\\d+\\]\\s*\\[gulp-tslint\\]\\s*(error|warning)\\s*(.*)\\[(\\d+)\\,\\s*(\\d+)\\]\\:\\s*(.*)$",
+					"file": 2,
+					"line": 3,
+					"column" : 4,
+					"message": 5,
+					"severity" : 1
+				}
+			}
+		}
+
+	]
+}
