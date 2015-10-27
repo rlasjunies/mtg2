@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "querystring", "request", "../services/configSecret", "../shared/user", "./token"], factory);
     }
-})(["require", "exports", "querystring", "request", "../services/configSecret", "../shared/user", "./token"], function (require, exports) {
+})(function (require, exports) {
     var qs = require("querystring");
     var request = require("request");
     var $ConfigSecret = require("../services/configSecret");
@@ -53,4 +53,4 @@
     exports.facebookAuth = facebookAuth;
 });
 
-//# sourceMappingURL=../authentication/facebookAuth.js.map
+//# sourceMappingURL=facebookAuth.js.map

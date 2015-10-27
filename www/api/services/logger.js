@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "winston"], factory);
     }
-})(["require", "exports", "winston"], function (require, exports) {
+})(function (require, exports) {
     var winston = require("winston");
     // $log.error("error log");
     // $log.warn("warn log");
@@ -39,4 +39,4 @@
     return logger;
 });
 
-//# sourceMappingURL=../services/logger.js.map
+//# sourceMappingURL=logger.js.map

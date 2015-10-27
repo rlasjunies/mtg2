@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "jwt-simple", "moment", "../services/configSecret"], factory);
     }
-})(["require", "exports", "jwt-simple", "moment", "../services/configSecret"], function (require, exports) {
+})(function (require, exports) {
     var jwt = require("jwt-simple");
     var moment = require("moment");
     var $configSecret = require("../services/configSecret");
@@ -32,4 +32,4 @@
     exports.createSendToken = createSendToken;
 });
 
-//# sourceMappingURL=../authentication/token.js.map
+//# sourceMappingURL=token.js.map

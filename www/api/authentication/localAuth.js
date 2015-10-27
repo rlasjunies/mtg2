@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "jwt-simple", "moment", "./token", "./emailVerification", "../services/logger", "../services/configSecret", "../services/mtg", "../shared/user"], factory);
     }
-})(["require", "exports", "jwt-simple", "moment", "./token", "./emailVerification", "../services/logger", "../services/configSecret", "../services/mtg", "../shared/user"], function (require, exports) {
+})(function (require, exports) {
     var jwt = require("jwt-simple");
     var moment = require("moment");
     var $Token = require("./token");
@@ -64,4 +64,4 @@
     exports.authenticationCheck = authenticationCheck;
 });
 
-//# sourceMappingURL=../authentication/localAuth.js.map
+//# sourceMappingURL=localAuth.js.map

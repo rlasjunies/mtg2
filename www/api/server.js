@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "express", "body-parser", "morgan", "passport", "./authentication/localStrategy", "./authentication/localAuth", "./authorization/authorization.middleware", "./authentication/facebookAuth", "./authentication/googleAuth", "./authentication/emailVerification", "./services/logger", "path", "./services/mtg", "./services/db", "./authorization/authorizationRoutes", "./pictures/picturesRoutes", "./users/usersRoutes", "./paints/paintsRoutes"], factory);
     }
-})(["require", "exports", "express", "body-parser", "morgan", "passport", "./authentication/localStrategy", "./authentication/localAuth", "./authorization/authorization.middleware", "./authentication/facebookAuth", "./authentication/googleAuth", "./authentication/emailVerification", "./services/logger", "path", "./services/mtg", "./services/db", "./authorization/authorizationRoutes", "./pictures/picturesRoutes", "./users/usersRoutes", "./paints/paintsRoutes"], function (require, exports) {
+})(function (require, exports) {
     var express = require("express");
     var bodyparser = require("body-parser");
     var morgan = require("morgan");

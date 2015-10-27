@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "underscore", "jwt-simple", "fs", "nodemailer", "../services/configSecret", "../services/config", "../shared/user", "../services/mtg"], factory);
     }
-})(["require", "exports", "underscore", "jwt-simple", "fs", "nodemailer", "../services/configSecret", "../services/config", "../shared/user", "../services/mtg"], function (require, exports) {
+})(function (require, exports) {
     var _ = require("underscore");
     var jwt = require("jwt-simple");
     var fs = require("fs");
@@ -95,4 +95,4 @@
     };
 });
 
-//# sourceMappingURL=../authentication/emailVerification.js.map
+//# sourceMappingURL=emailVerification.js.map

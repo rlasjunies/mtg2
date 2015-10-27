@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "./logger", "./string+"], factory);
     }
-})(["require", "exports", "./logger", "./string+"], function (require, exports) {
+})(function (require, exports) {
     var $log = require("./logger");
     var stringPolyFill = require("./string+");
     var Server = (function () {
@@ -24,4 +24,4 @@
     exports.log = $log;
 });
 
-//# sourceMappingURL=../services/mtg.js.map
+//# sourceMappingURL=mtg.js.map

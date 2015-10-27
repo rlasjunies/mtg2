@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "../services/mtg", "../shared/user"], factory);
     }
-})(["require", "exports", "../services/mtg", "../shared/user"], function (require, exports) {
+})(function (require, exports) {
     var $ = require("../services/mtg");
     var $usersModel = require("../shared/user");
     //import $authorization = require("../authorization/authorizationService");
@@ -136,4 +136,4 @@
     ;
 });
 
-//# sourceMappingURL=../users/usersRoutes.js.map
+//# sourceMappingURL=usersRoutes.js.map

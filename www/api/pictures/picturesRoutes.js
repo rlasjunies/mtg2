@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "formidable", "fs-extra", "../services/mtg", "path"], factory);
     }
-})(["require", "exports", "formidable", "fs-extra", "../services/mtg", "path"], function (require, exports) {
+})(function (require, exports) {
     var formidable = require("formidable");
     var fs = require("fs-extra");
     var $ = require("../services/mtg");
@@ -80,4 +80,4 @@
     exports.deletePicture = deletePicture;
 });
 
-//# sourceMappingURL=../pictures/picturesRoutes.js.map
+//# sourceMappingURL=picturesRoutes.js.map

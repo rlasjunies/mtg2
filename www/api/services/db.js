@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "mongoose", "bluebird", "./config", "./configSecret", "./logger"], factory);
     }
-})(["require", "exports", "mongoose", "bluebird", "./config", "./configSecret", "./logger"], function (require, exports) {
+})(function (require, exports) {
     var mongoose = require("mongoose");
     var Promise = require("bluebird");
     var $Config = require("./config");
@@ -27,4 +27,4 @@
     exports.disConnectDB = Promise.promisify(mongoose.disconnect, mongoose);
 });
 
-//# sourceMappingURL=../services/db.js.map
+//# sourceMappingURL=db.js.map

@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "request", "../shared/user", "./token", "../services/configSecret"], factory);
     }
-})(["require", "exports", "request", "../shared/user", "./token", "../services/configSecret"], function (require, exports) {
+})(function (require, exports) {
     var libRequest = require("request");
     var libUser = require("../shared/user");
     var libToken = require("./token");
@@ -75,4 +75,4 @@
     exports.googleAuth = googleAuth;
 });
 
-//# sourceMappingURL=../authentication/googleAuth.js.map
+//# sourceMappingURL=googleAuth.js.map

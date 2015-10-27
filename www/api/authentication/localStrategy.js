@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "passport-local", "../shared/user", "../services/logger"], factory);
     }
-})(["require", "exports", "passport-local", "../shared/user", "../services/logger"], function (require, exports) {
+})(function (require, exports) {
     var passport_local = require("passport-local");
     var libuser = require("../shared/user");
     var $log = require("../services/logger");
@@ -72,4 +72,4 @@
     exports.register = register;
 });
 
-//# sourceMappingURL=../authentication/localStrategy.js.map
+//# sourceMappingURL=localStrategy.js.map

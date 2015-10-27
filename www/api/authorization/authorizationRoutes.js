@@ -1,11 +1,11 @@
-(function (deps, factory) {
+(function (factory) {
     if (typeof module === 'object' && typeof module.exports === 'object') {
         var v = factory(require, exports); if (v !== undefined) module.exports = v;
     }
     else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
+        define(["require", "exports", "fs-extra", "../services/mtg"], factory);
     }
-})(["require", "exports", "fs-extra", "../services/mtg"], function (require, exports) {
+})(function (require, exports) {
     var fs = require("fs-extra");
     var $ = require("../services/mtg");
     var moduleName = "authorizationRoutes@";
@@ -40,4 +40,4 @@
     exports.getAllRoles = getAllRoles;
 });
 
-//# sourceMappingURL=../authorization/authorizationRoutes.js.map
+//# sourceMappingURL=authorizationRoutes.js.map
