@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import * as libRequest from "request";
 import * as libUser from "../shared/user";
 import * as libToken from "./token";
@@ -36,6 +37,42 @@ export function googleAuth(expReq, expRes) {
         requestParams.json = true;
         libRequest.get(requestParams, (err, response, profile) => {
             //console.log("\ngoogleAuth:" + err + response + JSON.stringify(profile));
+=======
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "request", "../shared/user", "./token", "../services/configSecret"], factory);
+    }
+})(function (require, exports) {
+    var libRequest = require("request");
+    var libUser = require("../shared/user");
+    var libToken = require("./token");
+    var $ConfigSecret = require("../services/configSecret");
+    // TODO how to define an interface more precise
+    // We need to define IGoogleProfile as return of this requestGet
+    // export interface request {//extends request.RequestAPI{
+    //     	//function post(options: Options, callback?: (error: any, response: any, body: any) => void): Request;
+    // 		function get(options: request.Options, callback?: (error: any, response: any, body: IGoogleProfile) => void): Request;
+    // }
+    function googleAuth(expReq, expRes) {
+        var tsBody = expReq.body;
+        //console.log(tsBody.code);
+        var opt = {
+            url: "https://accounts.google.com/o/oauth2/token",
+            json: true,
+            form: {
+                code: tsBody.code,
+                client_id: tsBody.clientId,
+                redirect_uri: tsBody.redirectUri,
+                grant_type: "authorization_code",
+                client_secret: $ConfigSecret.GOOGLE_SECRET
+            }
+        };
+        libRequest.post(opt, function (err, response, token) {
+            //console.log("\ngoogleAuth - token: " + JSON.stringify(token));
+>>>>>>> origin/master
             if (err) {
                 throw err;
             }
@@ -65,4 +102,4 @@ export function googleAuth(expReq, expRes) {
     // res.status(200).send({ message: "fine!" });
 }
 
-//# sourceMappingURL=../authentication/googleAuth.js.map
+//# sourceMappingURL=googleAuth.js.map

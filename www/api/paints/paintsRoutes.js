@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import * as $log from "../services/logger";
 import * as $paintsModel from "../shared/paints";
 var moduleName = "paintsRoutes@";
@@ -9,6 +10,47 @@ export function create(expReq, expRes, next) {
     var newPaint = new paintModel(expReq.body);
     newPaint.validate(function (err) {
         newPaint.save((err, paint) => {
+=======
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "../services/logger", "../shared/paints"], factory);
+    }
+})(function (require, exports) {
+    var $log = require("../services/logger");
+    var $paintsModel = require("../shared/paints");
+    var moduleName = "paintsRoutes@";
+    //Create
+    function create(expReq, expRes, next) {
+        $log.profile(moduleName + "@create");
+        //$log.debug(moduleName + "@create\n" + expReq.body);
+        var paintModel = $paintsModel.paintModel();
+        var newPaint = new paintModel(expReq.body);
+        newPaint.validate(function (err) {
+            newPaint.save(function (err, paint) {
+                if (err) {
+                    return expRes.status(500).write({ message: "Error writing job!" });
+                }
+                $log.debug(moduleName + "@create:\n" + paint);
+                $log.profile(moduleName + "@create");
+                return expRes.status(200).send(paint);
+            });
+        });
+    }
+    exports.create = create;
+    ;
+    //find
+    function find(expReq, expRes, next) {
+        $log.profile(moduleName + "@find");
+        var paints = $paintsModel.paintModel();
+        var qry = {};
+        if (expReq.params.id) {
+            qry = { _id: expReq.params.id };
+        }
+        paints.find(qry, function (err, paint) {
+>>>>>>> origin/master
             if (err) {
                 return expRes.status(500).write({ message: "Error writing job!" });
             }
@@ -73,4 +115,4 @@ export function update(expReq, expRes, next) {
 }
 ;
 
-//# sourceMappingURL=../paints/paintsRoutes.js.map
+//# sourceMappingURL=paintsRoutes.js.map

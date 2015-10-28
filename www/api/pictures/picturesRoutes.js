@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import * as formidable from "formidable";
 import * as fs from "fs-extra";
 import * as $ from "../services/mtg";
@@ -25,6 +26,44 @@ export function uploadPicture(expReq, expRes, next) {
                     .header({ 'content-type': 'application/json' })
                     .send({ fields: fields, files: files });
             }
+=======
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "formidable", "fs-extra", "../services/mtg", "path"], factory);
+    }
+})(function (require, exports) {
+    var formidable = require("formidable");
+    var fs = require("fs-extra");
+    var $ = require("../services/mtg");
+    var path = require("path");
+    //path.dirname()
+    var moduleName = "uploadRoutes@";
+    function uploadPicture(expReq, expRes, next) {
+        var form = new formidable.IncomingForm();
+        form.encoding = 'utf-8';
+        form.parse(expReq, function (err, fields, files) {
+            var sourceFile = files[0].path;
+            var destinationFile = path.join($.server.picturesPath, files[0].name);
+            $.log.info(destinationFile + " <= " + sourceFile);
+            fs.exists(destinationFile, function (isFileExisting) {
+                if (isFileExisting) {
+                    expRes
+                        .status(406)
+                        .header({ 'content-type': 'application/json' })
+                        .send({ error: true, errorMsg: "File already exists. Delete first!" });
+                }
+                else {
+                    fs.rename(sourceFile, destinationFile);
+                    expRes
+                        .status(200)
+                        .header({ 'content-type': 'application/json' })
+                        .send({ fields: fields, files: files });
+                }
+            });
+>>>>>>> origin/master
         });
     });
 }
@@ -68,4 +107,4 @@ export function deletePicture(expReq, expRes, next) {
     }
 }
 
-//# sourceMappingURL=../pictures/picturesRoutes.js.map
+//# sourceMappingURL=picturesRoutes.js.map

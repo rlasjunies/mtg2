@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import * as qs from "querystring";
 import * as request from "request";
 import * as $ConfigSecret from "../services/configSecret";
@@ -17,6 +18,30 @@ export function facebookAuth(expReq, expRes) {
         qs: params
     }, (err, response, accessToken) => {
         accessToken = qs.parse(accessToken);
+=======
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "querystring", "request", "../services/configSecret", "../shared/user", "./token"], factory);
+    }
+})(function (require, exports) {
+    var qs = require("querystring");
+    var request = require("request");
+    var $ConfigSecret = require("../services/configSecret");
+    var libUser = require("../shared/user");
+    var libToken = require("./token");
+    function facebookAuth(expReq, expRes) {
+        var accessTokenUrl = "https://graph.facebook.com/oauth/access_token";
+        var graphApiUrl = "https://graph.facebook.com/me";
+        var params = {
+            client_id: expReq.body.clientId,
+            redirect_uri: expReq.body.redirectUri,
+            client_secret: $ConfigSecret.FACEBOOK_SECRET,
+            code: expReq.body.code
+        };
+>>>>>>> origin/master
         request.get({
             url: graphApiUrl,
             qs: accessToken,
@@ -43,4 +68,4 @@ export function facebookAuth(expReq, expRes) {
     });
 }
 
-//# sourceMappingURL=../authentication/facebookAuth.js.map
+//# sourceMappingURL=facebookAuth.js.map

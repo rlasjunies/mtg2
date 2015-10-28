@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import * as $ from "../services/mtg";
 import * as fs from "fs-extra";
 var moduleName = "authorizationService@";
@@ -28,6 +29,27 @@ export function checksAccessRight(accessRight) {
             $.log.info(`accessRights.indexOf(${accessRight}):` + accessRights.indexOf(accessRight));
             if (accessRights.indexOf(accessRight) !== -1) {
                 allowed = true;
+=======
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "../services/mtg", "fs-extra"], factory);
+    }
+})(function (require, exports) {
+    var $ = require("../services/mtg");
+    var fs = require("fs-extra");
+    var moduleName = "authorizationService@";
+    function checksRole(roles) {
+        return function (req, res, next) {
+            var allowed = false;
+            for (var _i = 0; _i < roles.length; _i++) {
+                var role = roles[_i];
+                if (req.user.allowedRoles.indexOf(role) !== -1) {
+                    allowed = true;
+                }
+>>>>>>> origin/master
             }
             if (!allowed) {
                 var msg = "Not allowed; Missing accessRight:" + accessRight;
@@ -77,4 +99,4 @@ function loadAccessRightFromRoles(userRoles, callback) {
     });
 }
 
-//# sourceMappingURL=../authorization/authorization.middleware.js.map
+//# sourceMappingURL=authorization.middleware.js.map

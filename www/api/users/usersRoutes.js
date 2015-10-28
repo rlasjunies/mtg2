@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import * as $ from "../services/mtg";
 import * as $usersModel from "../shared/user";
 //import $authorization = require("../authorization/authorizationService");
@@ -9,6 +10,47 @@ export function create(expReq, expRes, next) {
     var newUser = new user(expReq.body);
     newUser.validate(function (err) {
         newUser.save((err, user) => {
+=======
+(function (factory) {
+    if (typeof module === 'object' && typeof module.exports === 'object') {
+        var v = factory(require, exports); if (v !== undefined) module.exports = v;
+    }
+    else if (typeof define === 'function' && define.amd) {
+        define(["require", "exports", "../services/mtg", "../shared/user"], factory);
+    }
+})(function (require, exports) {
+    var $ = require("../services/mtg");
+    var $usersModel = require("../shared/user");
+    //import $authorization = require("../authorization/authorizationService");
+    var moduleName = "usersRoutes@";
+    //Create
+    function create(expReq, expRes, next) {
+        $.log.profile(moduleName + "@create");
+        var user = $usersModel.userModel();
+        var newUser = new user(expReq.body);
+        newUser.validate(function (err) {
+            newUser.save(function (err, user) {
+                if (err) {
+                    return expRes.status(500).write({ message: "Error writing job!" });
+                }
+                $.log.debug(moduleName + "@create:\n" + user);
+                $.log.profile(moduleName + "@create");
+                return expRes.status(200).send(user);
+            });
+        });
+    }
+    exports.create = create;
+    ;
+    //find
+    function find(expReq, expRes, next) {
+        $.log.profile(moduleName + "@find");
+        var users = $usersModel.userModel();
+        var qry = {};
+        if (expReq.params.id) {
+            qry = { _id: expReq.params.id };
+        }
+        users.find(qry, function (err, user) {
+>>>>>>> origin/master
             if (err) {
                 return expRes.status(500).write({ message: "Error writing job!" });
             }
@@ -121,4 +163,4 @@ export function updateMe(expReq, expRes, next) {
 }
 ;
 
-//# sourceMappingURL=../users/usersRoutes.js.map
+//# sourceMappingURL=usersRoutes.js.map

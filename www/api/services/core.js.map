@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"version":3,"sources":["services/core.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,OAAO,MAAM,UAAU,CAAC;AAEpC,OAAO,KAAK,IAAI,MAAM,UAAU,CAAC;AACjC,oCAAoC;AAEpC,WAAW,GAAG,GAAG,IAAI,CAAC;AACtB,WAAW,MAAM,GAAG,OAAO,CAAC;AAC5B,sBAAsB","file":"services/core.js","sourcesContent":["import * as $Config from \"./config\";\r\nimport * as $ConfigSecret from \"./configSecret\";\r\nimport * as $log from \"./logger\";\r\n//import $db = require(\"./db.nedb\");\r\n\r\nexport var log = $log;\r\nexport var config = $Config;\r\n//export var db = $db;"],"sourceRoot":"/source/"}
+=======
+{"version":3,"sources":["services/core.ts"],"names":[],"mappings":";;;;;;;;IAAA,IAAO,OAAO,WAAW,UAAU,CAAC,CAAC;IAErC,IAAO,IAAI,WAAW,UAAU,CAAC,CAAC;IAClC,oCAAoC;IAEzB,WAAG,GAAG,IAAI,CAAC;IACX,cAAM,GAAG,OAAO,CAAC;;AAC5B,sBAAsB","file":"services/core.js","sourcesContent":["import $Config = require(\"./config\");\r\nimport $ConfigSecret = require(\"./configSecret\");\r\nimport $log = require(\"./logger\");\r\n//import $db = require(\"./db.nedb\");\r\n\r\nexport var log = $log;\r\nexport var config = $Config;\r\n//export var db = $db;"],"sourceRoot":"/source/"}
+>>>>>>> origin/master
