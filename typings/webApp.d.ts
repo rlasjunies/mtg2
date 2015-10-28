@@ -25,6 +25,9 @@
 /// <reference path='../web/_references.ts' />
 
 
+/// <reference path='../web/authorization/authorizationService.ts' />
+
+
 /// <reference path='../web/authentication/auth.ts' />
 
 
@@ -32,9 +35,6 @@
 
 
 /// <reference path='../web/authentication/authToken.ts' />
-
-
-/// <reference path='../web/authorization/authorizationService.ts' />
 
 
 /// <reference path='../web/blocks/apiendpoint.config.ts' />
@@ -47,6 +47,12 @@
 
 
 /// <reference path='../web/blocks/logdecorator.config.ts' />
+
+
+/// <reference path='../web/caroussel/app.ts' />
+
+
+/// <reference path='../web/caroussel/caroussel.ts' />
 
 
 /// <reference path='../web/header/header.htm.ts' />
@@ -71,15 +77,6 @@
 
 
 /// <reference path='../web/logout/logoutRoute.ts' />
-
-
-/// <reference path='../web/main/main.htm.ts' />
-
-
-/// <reference path='../web/main/mainController.ts' />
-
-
-/// <reference path='../web/main/mainRoute.ts' />
 
 
 /// <reference path='../web/paints/paints.htm.ts' />
@@ -113,6 +110,15 @@
 
 
 /// <reference path='../web/pictures/picturesUploadController.ts' />
+
+
+/// <reference path='../web/main/main.htm.ts' />
+
+
+/// <reference path='../web/main/mainController.ts' />
+
+
+/// <reference path='../web/main/mainRoute.ts' />
 
 
 /// <reference path='../web/register/register.htm.ts' />
@@ -155,6 +161,21 @@
 
 
 /// <reference path='../web/users/usersService.ts' />
+
+
+/// <reference path='../web/caroussel/core/core_event.ts' />
+
+
+/// <reference path='../web/caroussel/core/core_image.ts' />
+
+
+/// <reference path='../web/caroussel/core/core_misc.ts' />
+
+
+/// <reference path='../web/caroussel/core/core_pubsub.ts' />
+
+
+/// <reference path='../web/caroussel/core/test.htm.ts' />
 
 
 //}

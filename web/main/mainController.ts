@@ -36,35 +36,35 @@ namespace mtg.main {
             picturesService.getAll().then(
                 (picturesFromServer: any) => {
                     this.pictures = picturesFromServer.files;
-                    
+
                     //////////
                                  this.gallery.clearItems();
 
             //jQuery.each<cpla.models.Paints>( evt.value, function ( key: number, val: cpla.models.Paints ) {
 
                     this.gallery.addItem( {
-                        // thumbnailUrl: val.Thumbnail,
-                        // PaintId: val.PaintId,
-                        // Name: val.Name,
-                        // Description: val.Description,
-                        // Year: val.Year,
-                        // PictureUrl: val.Picture,
-                        // Size: val.Size    
+                        thumbnailUrl: "",//val.Thumbnail,
+                        PaintId: 0,//val.PaintId,
+                        Name: "", //val.Name,
+                        Description: "",//val.Description,
+                        Year: "", //val.Year,
+                        PictureUrl: "", //val.Picture,
+                        Size: "" //val.Size
                 });
 
             //});
 
-            this.gallery.selectFirstItem();   
+            this.gallery.selectFirstItem();
                     //////////
-                    
-                    
+
+
                 }).catch(
                 (reason: any) => {
                     this.$log.warn("Error message: \n" + JSON.stringify(reason), "Cannot load pictures resources:");
                     this.notificationService.error("Error message: \n" + JSON.stringify(reason), "Cannot load paints resources:");
                 });
-                            
-   
+
+
         }
     }
 

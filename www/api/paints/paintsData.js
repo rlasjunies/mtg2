@@ -26,4 +26,4 @@
 //     });
 // }
 
-//# sourceMappingURL=paintsData.js.map
+//# sourceMappingURL=../paints/paintsData.js.map

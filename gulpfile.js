@@ -52,8 +52,8 @@ var config = {
         //typescript: require('typescript') //Force the usage of the local installed TSC?
     },
     tscConfApi: {
-        target: "ES6",
-        module: "umd",
+        target: "ES2015",
+        module: "commonjs",
         declarationFiles: false,
         noExternalResolve: true,
         //noLib: true

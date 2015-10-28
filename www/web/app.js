@@ -233,6 +233,49 @@ var mtg;
 /// <reference path="../../typings/tsd.d.ts"/>
 var mtg;
 (function (mtg) {
+    var authorization;
+    (function (authorization) {
+        "use strict";
+        authorization.authorizatinServiceStringName = "AuthorizationService";
+        var AuthorizationService = (function () {
+            function AuthorizationService($http) {
+                this.$http = $http;
+            }
+            AuthorizationService.prototype.getAllAccessRights = function () {
+                return this.$http.get("/api/authorization/accessrights")
+                    .then(function (response) {
+                    return response.data;
+                });
+            };
+            AuthorizationService.prototype.getAllRoles = function () {
+                return this.$http.get("/api/authorization/roles")
+                    .then(function (response) {
+                    return response.data;
+                });
+            };
+            AuthorizationService.prototype.addRole = function (roles, roleID) {
+                if (roles[roleID] === undefined) {
+                    roles.push(roleID);
+                }
+            };
+            AuthorizationService.prototype.removeRole = function (roles, roleID) {
+                var index = roles.indexOf(roleID);
+                roles.splice(index, 1);
+            };
+            AuthorizationService.prototype.hasGotRole = function (roles, roleID) {
+                return roles.indexOf(roleID) === -1 ? false : true;
+            };
+            AuthorizationService.$inject = ["$http"];
+            return AuthorizationService;
+        })();
+        angular
+            .module("app")
+            .service(mtg.authorization.authorizatinServiceStringName, AuthorizationService);
+    })(authorization = mtg.authorization || (mtg.authorization = {}));
+})(mtg || (mtg = {}));
+/// <reference path="../../typings/tsd.d.ts"/>
+var mtg;
+(function (mtg) {
     var authentication;
     (function (authentication) {
         "use strict";
@@ -322,49 +365,611 @@ var mtg;
             .factory("AuthToken", factory);
     })(authentication = mtg.authentication || (mtg.authentication = {}));
 })(mtg || (mtg = {}));
-/// <reference path="../../typings/tsd.d.ts"/>
-var mtg;
-(function (mtg) {
-    var authorization;
-    (function (authorization) {
-        "use strict";
-        authorization.authorizatinServiceStringName = "AuthorizationService";
-        var AuthorizationService = (function () {
-            function AuthorizationService($http) {
-                this.$http = $http;
+// /// <reference path="core/core_pubsub.ts" />
+// /// <reference path="core/core.ts" />
+// /// <reference path="core/core_restAPI.ts" />
+// /// <reference path="libs/typings/jquery/jquery.d.ts" />
+// /// <reference path="libs/typings/jquery.RL.d.ts" />
+// /// <reference path="carrousel.ts"/>     
+// 
+// //ajouter le caroussel sur labiographie
+// //voir si on peut monter les boutons
+// //voir si on peut changer les couleurs
+//     // des boutons
+//     // ou contranste du fond
+// //mettre le détail en fixe
+// //Vignette
+//     //carré sans distorsion   
+// 
+// // class cmdLoadPaints implements core.pubsub.IPubSubMsg { };
+// // class evtPaintsLoaded implements core.pubsub.IPubSubMsg { };
+// // 
+// // class cmdLoadBiography implements core.pubsub.IPubSubMsg { };
+// // //class evtBiographyLoaded implements core.pubsub.IPubSubMsg { };
+// // 
+// // 
+// // class cmdLoadPaint implements core.pubsub.IPubSubMsg { constructor( public paintId: string ) { } };
+// // class evtPaintLoaded implements core.pubsub.IPubSubMsg { constructor( public paint: models.paints.Paint ) { } };
+// // 
+// // class cmdUpdatePaint implements core.pubsub.IPubSubMsg { constructor( public paintId: string ) { } };
+// // class evtPaintUpdated implements core.pubsub.IPubSubMsg { constructor( public paint: models.paints.Paint ) { } };
+// // 
+// // class cmdJumpToPage_AboutMe implements core.pubsub.IPubSubMsg { };
+// // //class evtPageShowned_AboutMe implements core.pubsub.IPubSubMsg { };
+// // 
+// // class cmdJumpToPage_Paints implements core.pubsub.IPubSubMsg { };
+// // //class evtPageShowned_Paints implements core.pubsub.IPubSubMsg { };
+// // 
+// // class cmdJumpToPage_News implements core.pubsub.IPubSubMsg { };
+// // class cmdJumpToPage_ContactMe implements core.pubsub.IPubSubMsg { };
+// // 
+// // class cmdShowPaint implements core.pubsub.IPubSubMsg { constructor( public item: caroussel.IGalleryItem ) { } };
+// // 
+// // //class cmdImageDetailQuit implements core.pubsub.IPubSubMsg { };
+// // 
+// // 
+// // var $imgScroller: JQuery;
+// // gApp = new core.App();
+// // 
+// // window.onload = () => {
+// //     
+// //     gApp.PubSub.subscribe( new cmdLoadPaints, function ( cmdLoadPaint ) {
+// //         var ps: models.paints.Paints;
+// //         ps = new models.paints.Paints();
+// //         $.mobile.loading( 'show' );
+// //         ps.getAll();
+// //     });
+// 
+// 
+//     //gApp.PubSub.subscribe( new cmdShowPaint( null ), function ( evt: cmdShowPaint) {
+//     //   //alert( "Paint clicked:" + evt.item.thumbnailUrl );
+// 
+//     //});
+// 
+//     //gApp.PubSub.subscribe( new models.paints.evtPaintsGetted( null, null, null ), function ( evt: models.paints.evtPaintsGetted ) {
+//     //    if ( evt.error ) {
+//     //        alert( "error: loading the paintings data!!:" + evt.error );
+//     //    } else {
+//     //        var items = [];
+// 
+//     //        $car.clearItems();
+// 
+//     //        jQuery.each<cpla.models.Paints>( evt.value, function ( key: number, val: cpla.models.Paints ) {
+//     //            var strOnClick = [
+//     //                "var $a = $( this );",
+//     //                "var p = JSON.parse( $a.data(\"paint\"));",
+//     //                "gApp.PubSub.publish( new cmdJumpToPage_ImageDetail( p ) );"
+//     //            ].join( " " );
+//     //            var strA = [
+//     //                //ok mais background different de image"<a href='#' style=\"background-image:url('" + val.Thumbnail +"')\" onclick=' var $a = $(this); var p = JSON.parse($a.data(\"paint\")); gApp.PubSub.publish( new cmdJumpToPage_ImageDetail(p) );'>" +
+//     //                "<a href='#' onclick='" + strOnClick + "'>",
+//     //                "<img src ='" + val.Thumbnail + "' class='myThumb'/> ",
+//     //                //"<div class= 'myThumb' style=\"background-image:url('" + val.Thumbnail +"')\"></div>" + 
+//     //                "<h2>" + val.Name + "</h2>",
+//     //                "<p class='ui-li-aside'>" + val.Description + "</p>",
+//     //                "</a>"
+//     //            ].join( " " );
+//     //            var $a = $( strA );
+//     //            $a.data( "paint", JSON.stringify( val ) );
+//     //            var $li = $( "<li></li>" );
+//     //            $li.prepend( $a );
+//     //            items.push( $li );
+// 
+//     //            $car.addItem( {
+//     //                thumbnailUrl: val.Thumbnail
+//     //            });
+// 
+//     //        });
+//     //        //$( "#listPaints" ).html( items ).listview( "refresh" );
+//     //        //resizeMyThumb();
+//     //    }
+//     //    $.mobile.loading( 'hide' );
+//     //});
+// // 
+// //     gApp.PubSub.subscribe( new models.paints.evtPaintsGetted( null, null, null ), function ( evt: models.paints.evtPaintsGetted ) {
+// //         if ( evt.error ) {
+// //             alert( "error: loading the paintings data!!:" + evt.error );
+// //         } else {
+// //             var items = [];
+// // 
+// //             gallery.clearItems();
+// // 
+// //             jQuery.each<cpla.models.Paints>( evt.value, function ( key: number, val: cpla.models.Paints ) {
+// // 
+// //                     gallery.addItem( {
+// //                         thumbnailUrl: val.Thumbnail,
+// //                         PaintId: val.PaintId,
+// //                         Name: val.Name,
+// //                         Description: val.Description,
+// //                         Year: val.Year,
+// //                         PictureUrl: val.Picture,
+// //                         Size: val.Size    
+// //                 });
+// // 
+// //             });
+// // 
+// //             gallery.selectFirstItem();      
+// //         }
+// //         $.mobile.loading( 'hide' );
+// //     });
+// 
+// //     gApp.PubSub.subscribe( new cmdJumpToPage_Paints, function ( cmdJumpToPage_Paints ) {
+// //         //$.mobile.changePage( "#pagePaints" );
+// //         $.mobile.changePage( "#pageImageDetail" );
+// //     });
+// // 
+// //     gApp.PubSub.subscribe( new cmdJumpToPage_AboutMe, function ( cmdJumpToPage_AboutMe ) {
+// //         $.mobile.changePage( "#pageMe" );
+// //     });
+// // 
+// //     gApp.PubSub.subscribe( new cmdJumpToPage_News, function ( cmdJumpToPage_Events ) {
+// //         $.mobile.changePage( "#pageNews" );
+// //     });
+// // 
+// //     gApp.PubSub.subscribe( new cmdJumpToPage_ContactMe, function () {
+// //         $.mobile.changePage( "#pageContactMe" );
+// //     });
+// // 
+// //     gApp.PubSub.subscribe( new cmdLoadBiography, function ( cmdLoadBiography ) {
+// //         var bio: models.aboutMes.AboutMes;
+// //         bio = new models.aboutMes.AboutMes();
+// //         $.mobile.loading( 'show' );
+// //         bio.get();
+// //     });
+// 
+// //     gApp.PubSub.subscribe( new models.aboutMes.evtBiographyGetted( null, null, null ), function ( evt: models.aboutMes.evtBiographyGetted ) {
+// //         if ( evt.error ) {
+// //             alert( "error: loading the paintings data!!:" + evt.error );
+// //         } else {
+// //             $( '#biography' ).html( evt.value.Biographie );
+// //         }
+// //         $.mobile.loading( 'hide' );
+// //     });
+// // 
+// //     $( "#pagePaints" ).on( "pageshow", function ( evt: JQueryEventObject ) {
+// //         gApp.PubSub.publish( new cmdLoadPaints() );
+// //         //alert( "paint shown" );
+// //     });
+// // 
+// //     $( "#pageMe" ).on( "pageshow", function ( evt: JQueryEventObject ) {
+// //         gApp.PubSub.publish( new cmdLoadBiography() );
+// //         //alert( "me shown" );
+// //     });
+// 
+//     //$( "#pageMe" ).trigger( "pageshow" );// mobile.changePage( "#pageMe" );
+//     //$( "#pageImageDetail" ).trigger( "pagebeforeshow" );
+//     //$( "#pageImageDetail" ).trigger( "pageshow" );
+// 
+//     //The first page is already loaded, I manually trigger the load of the paints
+// //     gApp.PubSub.publish( new cmdLoadPaints() );
+// // 
+// // }
+// 
+// 
+// //    var infiniteLoopRunning: boolean = false;       
+// 
+// // var gallery: caroussel.Gallery;
+// 
+// $( "#pageImageDetail" ).on( "pageshow", function ( evt: JQueryEventObject ) {
+// 
+//     if ( gallery == undefined ) {
+// 
+//         //calculate the dimensions
+//         var windowHeight = $( window ).height(); //Get available screen height, not including any browser chrome
+//         var headerHeight = $( '#pageImageDetailHeader' ).outerHeight() + 1; //Get height of page header
+//         var $footer = $( '#pageImageDetailFooter' );
+//         var footerHeight = $footer.outerHeight(); // I do not know why 20 is mising Get height of page header
+//         var $pageContent = $( '#pageImageDetailContent' );
+//         var pageContentPaddingTop = parseInt( $( this ).css( "padding-top" ).replace( "px", "" ) );
+//         var pageContentPaddingBottom = pageContentPaddingTop // ne retourne pas de valeur ?? parseInt( $pageContent.css( "padding-bottom" ).replace( "px", "" ) );
+//         var winContentHeight = windowHeight - headerHeight - footerHeight - pageContentPaddingTop - pageContentPaddingBottom; //Calculate out new height (-2 if you have a 1px border on content container)
+// 
+//         // //define the place for the "graphical object
+//         // $pageContent.width( $( window ).width() );
+//         // $pageContent.height( winContentHeight );
+//         // $pageContent.css( 'top', headerHeight + 'px' );
+// 
+//         //create the "dynamic object"
+//         gallery = new caroussel.Gallery( $( '#gallery' ) );
+// 
+//         //define events on the objects
+//         gallery.onItemClick.add( function ( item: caroussel.IGalleryItem ) {
+//             gApp.PubSub.publish( new cmdShowPaint( item ) );
+//         });
+// 
+//         //request load paintings
+//         // if ( gApp != undefined ) gApp.PubSub.publish( new cmdLoadPaints() );
+//         // else alert( "gApp undefined!" );
+//     }
+// });
+// 
+var core;
+(function (core) {
+    var image;
+    (function (image) {
+        (function (enumImageResizeMode) {
+            enumImageResizeMode[enumImageResizeMode["fit_vertically"] = 0] = "fit_vertically";
+            enumImageResizeMode[enumImageResizeMode["fit_horizontal"] = 1] = "fit_horizontal";
+            enumImageResizeMode[enumImageResizeMode["fit_vh"] = 2] = "fit_vh";
+            enumImageResizeMode[enumImageResizeMode["square"] = 3] = "square";
+        })(image.enumImageResizeMode || (image.enumImageResizeMode = {}));
+        var enumImageResizeMode = image.enumImageResizeMode;
+        function fitImageInContainer($img, maxWidth, maxHeight, mode, centerInParent) {
+            centerInParent = centerInParent == undefined ? false : centerInParent;
+            var newImg = new Image();
+            newImg.onload = function () {
+                var coeffHeight = maxHeight / newImg.height;
+                var coeffWidth = maxWidth / newImg.width;
+                //var coeff = coeffHeight < coeffWidth ? coeffHeight : coeffWidth;
+                var coeff = Math.min(coeffHeight, coeffWidth);
+                if (mode == enumImageResizeMode.fit_vh) {
+                    if (coeff < 1) {
+                        $img.height($img.height() * coeff);
+                    }
+                    else {
+                        $img.height(newImg.height);
+                        $img.width(newImg.width);
+                    }
+                    ;
+                }
+                else if (mode == enumImageResizeMode.fit_vertically) {
+                    $img.height($img.height() * coeffHeight);
+                }
+                else if (mode == enumImageResizeMode.fit_horizontal) {
+                    $img.width($img.width() * coeffWidth);
+                }
+                if (centerInParent) {
+                    $img.css("left", (maxWidth - $img.width()) / 2 + 'px');
+                    $img.css("top", (maxHeight - $img.height()) / 2 + 'px');
+                }
+                $img.css("visibility", "visible");
+            };
+            newImg.src = $img.attr('src'); // this must be done AFTER setting onload
+        }
+        image.fitImageInContainer = fitImageInContainer;
+    })(image = core.image || (core.image = {}));
+})(core || (core = {}));
+//// Exposing events
+//interface IMessageEvent extends IEvent {
+//    add( listener: ( message: string ) => void ): void;
+//    remove( listener: ( message: string ) => void ): void;
+//    trigger( message: string ): void;
+//}
+//class Foo {                                                      
+//    // Events
+//    public onMessage: IMessageEvent = new TypedEvent();
+//    // Methods
+//    public bar(): void {
+//        this.onMessage.trigger( 'event fired' );
+//    }
+//}
+//// Consuming events
+//var foo = new Foo();
+//foo.onMessage.add( ( message ) => {
+//    alert( message );
+//});
+//foo.bar();
+var core;
+(function (core) {
+    var event;
+    (function (event) {
+        var TypedEvent = (function () {
+            function TypedEvent() {
+                // Private member vars
+                this._listeners = [];
             }
-            AuthorizationService.prototype.getAllAccessRights = function () {
-                return this.$http.get("/api/authorization/accessrights")
-                    .then(function (response) {
-                    return response.data;
-                });
+            TypedEvent.prototype.add = function (listener) {
+                /// <summary>Registers a new listener for the event.</summary>
+                /// <param name="listener">The callback function to register.</param>
+                this._listeners.push(listener);
             };
-            AuthorizationService.prototype.getAllRoles = function () {
-                return this.$http.get("/api/authorization/roles")
-                    .then(function (response) {
-                    return response.data;
-                });
-            };
-            AuthorizationService.prototype.addRole = function (roles, roleID) {
-                if (roles[roleID] === undefined) {
-                    roles.push(roleID);
+            TypedEvent.prototype.remove = function (listener) {
+                /// <summary>Unregisters a listener from the event.</summary>
+                /// <param name="listener">The callback function that was registered. If missing then all listeners will be removed.</param>
+                if (typeof listener === 'function') {
+                    for (var i = 0, l = this._listeners.length; i < l; l++) {
+                        if (this._listeners[i] === listener) {
+                            this._listeners.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+                else {
+                    this._listeners = [];
                 }
             };
-            AuthorizationService.prototype.removeRole = function (roles, roleID) {
-                var index = roles.indexOf(roleID);
-                roles.splice(index, 1);
+            TypedEvent.prototype.trigger = function () {
+                var a = [];
+                for (var _i = 0; _i < arguments.length; _i++) {
+                    a[_i - 0] = arguments[_i];
+                }
+                /// <summary>Invokes all of the listeners for this event.</summary>
+                /// <param name="args">Optional set of arguments to pass to listners.</param>
+                var context = {};
+                var listeners = this._listeners.slice(0);
+                for (var i = 0, l = listeners.length; i < l; i++) {
+                    listeners[i].apply(context, a || []);
+                }
             };
-            AuthorizationService.prototype.hasGotRole = function (roles, roleID) {
-                return roles.indexOf(roleID) === -1 ? false : true;
-            };
-            AuthorizationService.$inject = ["$http"];
-            return AuthorizationService;
+            return TypedEvent;
         })();
-        angular
-            .module("app")
-            .service(mtg.authorization.authorizatinServiceStringName, AuthorizationService);
-    })(authorization = mtg.authorization || (mtg.authorization = {}));
-})(mtg || (mtg = {}));
+        event.TypedEvent = TypedEvent;
+    })(event = core.event || (core.event = {}));
+})(core || (core = {}));
+var core;
+(function (core) {
+    var misc;
+    (function (misc) {
+        (function (enumEntityStatus) {
+            enumEntityStatus[enumEntityStatus["success"] = 0] = "success";
+            enumEntityStatus[enumEntityStatus["failed"] = 1] = "failed";
+        })(misc.enumEntityStatus || (misc.enumEntityStatus = {}));
+        var enumEntityStatus = misc.enumEntityStatus;
+        (function (eLogSeverity) {
+            eLogSeverity[eLogSeverity["critical"] = 0] = "critical";
+            eLogSeverity[eLogSeverity["warning"] = 1] = "warning";
+            eLogSeverity[eLogSeverity["information"] = 2] = "information";
+        })(misc.eLogSeverity || (misc.eLogSeverity = {}));
+        var eLogSeverity = misc.eLogSeverity;
+        /* Returns the class name of the argument or undefined if
+       it's not a valid JavaScript object.
+        */
+        function getObjectClass(obj) {
+            if (obj && obj.constructor && obj.constructor.toString) {
+                var arr = obj.constructor.toString().match(/function\s*(\w+)/);
+                if (arr && arr.length == 2) {
+                    return arr[1];
+                }
+            }
+            return undefined;
+        }
+        misc.getObjectClass = getObjectClass;
+        function GUID_new() {
+            var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+            return guid;
+        }
+        misc.GUID_new = GUID_new;
+        ;
+    })(misc = core.misc || (core.misc = {}));
+})(core || (core = {}));
+/// <reference path="./core/core_image.ts" />
+/// <reference path="./core/core_event.ts" />
+/// <reference path="./core/core_misc.ts" />
+/// <reference path="../../typings/tsd.d.ts"/>
+var caroussel;
+(function (caroussel) {
+    (function (enumViewerDetail_visibility) {
+        enumViewerDetail_visibility[enumViewerDetail_visibility["show_always"] = 0] = "show_always";
+        enumViewerDetail_visibility[enumViewerDetail_visibility["appears_adn_disappears"] = 1] = "appears_adn_disappears";
+        enumViewerDetail_visibility[enumViewerDetail_visibility["hide"] = 2] = "hide";
+    })(caroussel.enumViewerDetail_visibility || (caroussel.enumViewerDetail_visibility = {}));
+    var enumViewerDetail_visibility = caroussel.enumViewerDetail_visibility;
+    var ImageViewer = (function () {
+        function ImageViewer(imageViewer, param) {
+            this.$me = imageViewer;
+            this.DEFAULT_SETTINGS = {
+                top: parseInt(this.$me.parent().css('top').replace("px", "")),
+                left: parseInt(this.$me.parent().css('left').replace("px", "")) + 150,
+                height: this.$me.parent().height(),
+                width: this.$me.parent().width() - 150,
+                viewerDetail: {
+                    visibility: enumViewerDetail_visibility.show_always,
+                    height: this.$me.parent().height(),
+                    width: 200,
+                }
+            };
+            if (param != undefined && param.top != undefined)
+                this.DEFAULT_SETTINGS.top = param.top;
+            if (param != undefined && param.left != undefined)
+                this.DEFAULT_SETTINGS.left = param.left;
+            if (param != undefined && param.height != undefined)
+                this.DEFAULT_SETTINGS.height = param.height;
+            if (param != undefined && param.width != undefined)
+                this.DEFAULT_SETTINGS.width = param.width;
+            if (param != undefined && param.viewerDetail != undefined) {
+                if (param != undefined && param.viewerDetail != undefined && param.viewerDetail.visibility != undefined)
+                    this.DEFAULT_SETTINGS.viewerDetail.visibility = param.viewerDetail.visibility;
+                if (param != undefined && param.viewerDetail != undefined && param.viewerDetail.height != undefined)
+                    this.DEFAULT_SETTINGS.viewerDetail.height = param.viewerDetail.height;
+                if (param != undefined && param.viewerDetail != undefined && param.viewerDetail.width != undefined)
+                    this.DEFAULT_SETTINGS.viewerDetail.width = param.viewerDetail.width;
+            }
+            this.$me.css("top", this.DEFAULT_SETTINGS.top);
+            this.$me.css("left", this.DEFAULT_SETTINGS.left);
+            this.$me.width(this.DEFAULT_SETTINGS.width);
+            this.$me.height(this.DEFAULT_SETTINGS.height);
+            this.$img = $("<img id='carousselImageViewer' class='carousselImageViewer' style='position:absolute;background-color=pink'/>");
+            this.$me.append(this.$img);
+            //TODO Delegate the HTML creation to calling component
+            var $imgDetailsHTML = $(["<div id='carousselImageViewerDetail' class='carousselImageViewerDetail flyout hidden' style='position:absolute;background-color=green'>",
+                //"<div data - role='fieldcontain' class='ui-hide-label'>",
+                //                            "<label for='name'>Nom:</label>",
+                //"<input type='text' disabled='disabled' style='float: left' name='name' id='name' value='' placeholder='NomPlaceHolder'/>",
+                //"<label for='description'>Description:</label>",
+                //"<input type='text' disabled='disabled' style='float: left' name='description' id='description' value='' placeholder='DescriptionPLaceHolder'/>",
+                "<p>Nom:</p><p id='name'></p>",
+                "<p>Description:</p><p id='description'></p > ",
+                //"</div>",
+                "</div>"].join(""));
+            this.$imgDetails = this.$me.append($imgDetailsHTML);
+            $imgDetailsHTML.css("top", parseInt(this.$me.css("top").replace("px", "")));
+            $imgDetailsHTML.css("left", parseInt(this.$me.css('left').replace('px', '')) + this.$me.width() - this.DEFAULT_SETTINGS.viewerDetail.width);
+            $imgDetailsHTML.width(this.DEFAULT_SETTINGS.width);
+            $imgDetailsHTML.height(this.DEFAULT_SETTINGS.height);
+        }
+        ImageViewer.prototype.source = function (url) {
+            var _this = this;
+            this.$img.fadeOut(250, function () {
+                //this.$imgViewer.attr( "visibility", "hidden" );
+                _this.$img.attr("src", url);
+                core.image.fitImageInContainer(_this.$img, _this.$me.width(), _this.$me.height(), core.image.enumImageResizeMode.fit_vh, true);
+                _this.$img.fadeIn(250);
+                $('#carousselImageViewerDetail').removeClass('hidden');
+                setTimeout(function () {
+                    $('#carousselImageViewerDetail').addClass('hidden');
+                }, 2000);
+            });
+        };
+        return ImageViewer;
+    })();
+    caroussel.ImageViewer = ImageViewer;
+    var Carrousel = (function () {
+        function Carrousel($caroussel, param) {
+            var _this = this;
+            this.$me = $caroussel;
+            this.$roller = $("<div id='roller' style='overflow:hidden; position:absolute; background-color:yellow'></div>");
+            this.$me.append(this.$roller);
+            this.DEFAULT_SETTINGS = {
+                top: parseInt(this.$me.parent().css("top").replace("px", "")),
+                left: parseInt(this.$me.parent().css("left").replace("px", "")),
+                height: this.$me.parent().height(),
+                width: 150,
+                thumbnailWidth: 150,
+                ArrowUP: {
+                    text: 'GO UP',
+                    height: 50,
+                },
+                ArrowDOWN: {
+                    text: 'GO DOWN',
+                    height: 50,
+                },
+            };
+            if (param != undefined && param.top != undefined)
+                this.DEFAULT_SETTINGS.top = param.top;
+            if (param != undefined && param.left != undefined)
+                this.DEFAULT_SETTINGS.left = param.left;
+            //if ( param != undefined && param.thumbnailWidth != undefined ) this.DEFAULT_SETTINGS.thumbnailWidth = param.thumbnailWidth;
+            if (param != undefined && param.height != undefined)
+                this.DEFAULT_SETTINGS.height = param.height;
+            if (param != undefined && param.width != undefined)
+                this.DEFAULT_SETTINGS.width = param.width;
+            if (param != undefined && param.ArrowUP != undefined) {
+                if (param != undefined && param.ArrowUP != undefined && param.ArrowUP.text != undefined)
+                    this.DEFAULT_SETTINGS.ArrowUP.text = param.ArrowUP.text;
+                if (param != undefined && param.ArrowUP != undefined && param.ArrowUP.height != undefined)
+                    this.DEFAULT_SETTINGS.ArrowUP.height = param.ArrowUP.height;
+            }
+            if (param != undefined && param.ArrowDOWN != undefined) {
+                if (param != undefined && param.ArrowDOWN != undefined && param.ArrowDOWN.text != undefined)
+                    this.DEFAULT_SETTINGS.ArrowDOWN.text = param.ArrowDOWN.text;
+                if (param != undefined && param.ArrowDOWN != undefined && param.ArrowDOWN.height != undefined)
+                    this.DEFAULT_SETTINGS.ArrowDOWN.height = param.ArrowDOWN.height;
+            }
+            this.$me.css("top", this.DEFAULT_SETTINGS.top);
+            this.$me.css("left", this.DEFAULT_SETTINGS.left);
+            this.$me.height(this.DEFAULT_SETTINGS.height);
+            this.$me.width(this.DEFAULT_SETTINGS.width);
+            var $ArrowUP = $("<div id='" + core.misc.GUID_new() + "' class='flyout hidden'><p align='center'>" + this.DEFAULT_SETTINGS.ArrowUP.text + "</p></div>");
+            var $ArrowDOWN = $("<div id='" + core.misc.GUID_new() + "' class='flyout hidden'><p align='center'>" + this.DEFAULT_SETTINGS.ArrowDOWN.text + "</p></div>");
+            //Add ArrowUP
+            this.$me.parent().append($ArrowUP);
+            $ArrowUP.css("top", this.DEFAULT_SETTINGS.top); // + this.DEFAULT_SETTINGS.padding);
+            $ArrowUP.css("left", this.DEFAULT_SETTINGS.left); // + this.DEFAULT_SETTINGS.padding );
+            $ArrowUP.height(this.DEFAULT_SETTINGS.ArrowUP.height);
+            $ArrowUP.width(this.DEFAULT_SETTINGS.width); // + pageContentPaddingLeft + pageContentPaddingRight );
+            //Add ArrowDOWN
+            this.$me.parent().append($ArrowDOWN);
+            $ArrowDOWN.css("top", this.DEFAULT_SETTINGS.height - this.DEFAULT_SETTINGS.ArrowDOWN.height); // + this.DEFAULT_SETTINGS.top + this.DEFAULT_SETTINGS.padding * 2);
+            $ArrowDOWN.css("left", this.DEFAULT_SETTINGS.left); // + this.DEFAULT_SETTINGS.padding);
+            $ArrowDOWN.height(this.DEFAULT_SETTINGS.ArrowDOWN.height);
+            $ArrowDOWN.width(this.DEFAULT_SETTINGS.width); // + pageContentPaddingLeft + pageContentPaddingRight );
+            this.$me.hover(function () {
+                $ArrowUP.removeClass('hidden');
+                $ArrowDOWN.removeClass('hidden');
+            }, function () {
+                $ArrowUP.addClass('hidden');
+                $ArrowDOWN.addClass('hidden');
+            });
+            //important to do it after the ilgViewer creation because there are some .flyout classes
+            $(".flyout").hover(function () {
+                $(".flyout").removeClass('hidden');
+            }, function () {
+                $(".flyout").addClass('hidden');
+            });
+            this.$roller.kinetic();
+            this.$roller.css("top", 0);
+            this.$roller.css("left", 0);
+            this.$roller.height(this.DEFAULT_SETTINGS.height);
+            this.$roller.width(this.DEFAULT_SETTINGS.width);
+            $ArrowUP.on('mousedown', function (evt) {
+                _this.$roller.kinetic("start", { velocityY: -10 });
+            });
+            $ArrowUP.on('mouseup', function (evt) {
+                _this.$roller.kinetic("end");
+            });
+            $ArrowDOWN.on('mousedown', function (evt) {
+                _this.$roller.kinetic("start", { velocityY: 10 });
+            });
+            $ArrowDOWN.on('mouseup', function (evt) {
+                _this.$roller.kinetic("end");
+            });
+        }
+        return Carrousel;
+    })();
+    caroussel.Carrousel = Carrousel;
+    var Gallery = (function () {
+        function Gallery($gallery, param) {
+            this.onItemClick = new core.event.TypedEvent();
+            this.$me = $gallery;
+            this.DEFAULT_SETTINGS = {
+                top: 0,
+                left: 0,
+                height: this.$me.parent().height(),
+                width: this.$me.parent().width(),
+                padding: 10,
+            };
+            //if ( param != undefined ) {
+            if (param != undefined && param.top != undefined)
+                this.DEFAULT_SETTINGS.top = param.top;
+            if (param != undefined && param.left != undefined)
+                this.DEFAULT_SETTINGS.left = param.left;
+            if (param != undefined && param.height != undefined)
+                this.DEFAULT_SETTINGS.height = param.height;
+            if (param != undefined && param.width != undefined)
+                this.DEFAULT_SETTINGS.width = param.width;
+            //if ( param.padding != undefined ) this.DEFAULT_SETTINGS.padding = param.padding;
+            //}
+            $gallery.attr('style', 'overflow:hidden; position:absolute; background-color:red;');
+            $gallery.css("top", this.DEFAULT_SETTINGS.top);
+            $gallery.css("left", this.DEFAULT_SETTINGS.left);
+            $gallery.height(this.DEFAULT_SETTINGS.height);
+            $gallery.width(this.DEFAULT_SETTINGS.width);
+            var $caroussel = $("<div id='caroussel' style='background-color:blue'></div>");
+            $gallery.append($caroussel);
+            this.caroussel = new Carrousel($caroussel);
+            var $imgViewer = $("<div></div>");
+            $gallery.append($imgViewer);
+            this.imageViewer = new ImageViewer($imgViewer);
+        }
+        Gallery.prototype.addItem = function (item) {
+            //if ( item.thumbnailwidth == undefined ) item.thumbnailwidth = this.DEFAULT_SETTINGS.thumbnailWidth;
+            var _this = this;
+            var $img = $("<img id ='" + core.misc.GUID_new() + "' class ='carousselItem' style='visibility:hidden;' src='" + item.thumbnailUrl + "'/>");
+            core.image.fitImageInContainer($img, 150, 150, core.image.enumImageResizeMode.fit_vh);
+            $img.css("visibility", "visible");
+            $img.on('click', function (evt) {
+                _this.imageViewer.source(item.PictureUrl);
+                //TODO delegate the feeding/rendering of the viewer detail
+                $(".carousselImageViewerDetail #name").html("<b>" + item.Name + "</b>");
+                $(".carousselImageViewerDetail #description").html("<b>" + item.Description + "</b>");
+            });
+            this.caroussel.$roller.append($img);
+        };
+        Gallery.prototype.clearItems = function () {
+            //delete all the items in the roller
+            this.caroussel.$roller.empty();
+        };
+        Gallery.prototype.selectFirstItem = function () {
+            //console.log( "id img:" + this.$roller.find( ":first-child" ).attr( "id" ) );
+            this.caroussel.$roller.find(":first-child").trigger('click');
+        };
+        return Gallery;
+    })();
+    caroussel.Gallery = Gallery;
+})(caroussel || (caroussel = {}));
 var mtg;
 (function (mtg) {
     var header;
@@ -659,108 +1264,6 @@ var mtg;
                 .config(route);
         })(logout = views.logout || (views.logout = {}));
     })(views = mtg.views || (mtg.views = {}));
-})(mtg || (mtg = {}));
-var mtg;
-(function (mtg) {
-    var main;
-    (function (main) {
-        main.mainTemplate = "<div layout-fill layout=\'column\' layout-align=\'center center\'>     <md-tabs md-dynamic-height md-border-bottom md-stretch-tabs=\'always\'>         <md-tab label=\'Accueil\'>             <md-tab-body class=\'md-padding\' id=\'contentTab1Id\'>                 <div style=\'display:table\'>                     <div style=\'display:table-cell;width:40%;vertical-align:middle\'>                         <div style=\'text-align:center\' id=\'corinnepairelasjunies\'>CORINNE PAIRE LASJUNIES</div>                         <div style=\'text-align:center;color:red\' id=\'artistepeintre\'>ARTISTE PEINTRE</div>                     </div>                     <div style=\'display:table-cell;width:60%\'>                         <img ng-src=\'/pictures/f52234_a1f7f030a4c74bed8fea92e1c0baaefa.png_srb_p_600_450_75_22_0.50_1.20_0.00_png_srb.png\' style=\'max-height:100%;max-width:100%\' />                     </div>                 </div>             </md-tab-body>         </md-tab>         <md-tab label=\'Gallery\'>             <md-tab-body class=\' md-padding\' id=\'contentTab2Id\'>                  <!--1<h1 class=\'md-display-2\'>Tab Two</h1>-->                 <!--<p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>-->                 <div layout=\'row\'>                     <div layout=\'column\'>                         <!--<div ng-repeat=\'picture in vm.pictures\' style=\'width:250px;height:250px\'>                             <img ng-src=\'/pictures/{{picture}}\' alt=\'{{picture}}\' style=\'max-width:100%;max-height:100%;\' />                         </div>-->             <md-grid-list >                 <md-grid-tile ng-class=\'{\'green\':user.active,\'gray\':!user.active}\'                               ng-repeat=\'user in vm.usersView\'                               ng-click=\'vm.onClick(user._id);\'>                     {{user.email}}                     <md-grid-tile-footer>                         <h3>{{user.displayName}}</h3>                         <h3>{{user.role}}</h3>                     </md-grid-tile-footer>                 </md-grid-tile>             </md-grid-list>                     </div>                 </div>                 <!--<md-grid-list class=\'gridListdemoBasicUsage md-padding\' md-cols-sm=\'2\' md-cols-md=\'3\' md-cols-gt-md=\'5\' md-row-height-gt-md=\'1:1\' md-row-height=\'2:2\'                           md-gutter=\'5px\'>-->                 <!--</md-grid-tile>-->                 <!--</md-grid-list>-->             </md-tab-body>         </md-tab>         <md-tab label=\'Exposition/Presse\'>             <md-tab-body class=\'md-padding\' id=\'contentTab2Id\'>                 <h1 class=\'md-display-2\'>Tab Three</h1>                 <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>             </md-tab-body>         </md-tab>         <md-tab label=\'Biographie\'>             <md-tab-body class=\'md-padding\'>                 <h1 class=\'md-display-2\'>Tab Three</h1>                 <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>             </md-tab-body>         </md-tab>         <md-tab label=\'Contact\'>             <md-tab-body class=\'md-padding\'>                 <h1 class=\'md-display-2\'>Tab Three</h1>                 <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>             </md-tab-body>         </md-tab>     </md-tabs> </div>";
-    })(main = mtg.main || (mtg.main = {}));
-})(mtg || (mtg = {}));
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../../typings/webApp.d.ts"/>
-var mtg;
-(function (mtg) {
-    var main;
-    (function (main) {
-        "use strict";
-        main.mainControllerStringName = "mtg.main.MainController";
-        var MainController = (function () {
-            function MainController($rootScope, $scope, $log, $mdSidenav, picturesService, notificationService) {
-                var _this = this;
-                this.$rootScope = $rootScope;
-                this.$scope = $scope;
-                this.$log = $log;
-                this.$mdSidenav = $mdSidenav;
-                this.picturesService = picturesService;
-                this.notificationService = notificationService;
-                this.$log.debug(mtg.main.mainControllerStringName + " loaded!");
-                this.$rootScope.headerConfiguration = new mtg.header.HeaderConfiguration("", true);
-                this.$scope.$on("$destroy", function () {
-                    //clean the header bar configuration
-                    _this.$rootScope.headerConfiguration = new mtg.header.HeaderConfiguration();
-                    ;
-                });
-                picturesService.getAll().then(function (picturesFromServer) {
-                    _this.pictures = picturesFromServer.files;
-                    //////////
-                    _this.gallery.clearItems();
-                    //jQuery.each<cpla.models.Paints>( evt.value, function ( key: number, val: cpla.models.Paints ) {
-                    _this.gallery.addItem({});
-                    //});
-                    _this.gallery.selectFirstItem();
-                    //////////
-                }).catch(function (reason) {
-                    _this.$log.warn("Error message: \n" + JSON.stringify(reason), "Cannot load pictures resources:");
-                    _this.notificationService.error("Error message: \n" + JSON.stringify(reason), "Cannot load paints resources:");
-                });
-            }
-            MainController.$inject = [
-                "$rootScope",
-                "$scope",
-                "$log",
-                "$mdSidenav",
-                "picturesService",
-                "notificationService"
-            ];
-            return MainController;
-        })();
-        main.MainController = MainController;
-        angular
-            .module("app")
-            .controller(mtg.main.mainControllerStringName, mtg.main.MainController);
-    })(main = mtg.main || (mtg.main = {}));
-})(mtg || (mtg = {}));
-/// <reference path="../../typings/tsd.d.ts"/>
-/// <reference path="../../typings/webApp.d.ts"/>
-var appState;
-(function (appState) {
-    "use strict";
-    appState.mainState = "main";
-    appState.mainUrl = "/";
-})(appState || (appState = {}));
-var mtg;
-(function (mtg) {
-    var main;
-    (function (main) {
-        "use strict";
-        route.$inject = [
-            "$stateProvider"
-        ];
-        function route($stateProvider) {
-            $stateProvider
-                .state(appState.mainState, {
-                url: appState.mainUrl,
-                views: {
-                    "header": {
-                        template: mtg.header.headerTemplate,
-                        controller: mtg.header.headerControllerStringName,
-                        controllerAs: "vm",
-                    },
-                    "container": {
-                        template: mtg.main.mainTemplate,
-                        controller: mtg.main.mainControllerStringName,
-                        controllerAs: "vm"
-                    },
-                    "footer": {}
-                }
-            });
-        }
-        ;
-        angular
-            .module("app")
-            .config(route);
-    })(main = mtg.main || (mtg.main = {}));
 })(mtg || (mtg = {}));
 var mtg;
 (function (mtg) {
@@ -1241,6 +1744,116 @@ var mtg;
             .module("app")
             .controller(mtg.pictures.pictureUploadControllerStringName, mtg.pictures.PicturesUploadController);
     })(pictures = mtg.pictures || (mtg.pictures = {}));
+})(mtg || (mtg = {}));
+var mtg;
+(function (mtg) {
+    var main;
+    (function (main) {
+        main.mainTemplate = "<div layout-fill layout=\'column\' layout-align=\'center center\'>     <md-tabs md-dynamic-height md-border-bottom md-stretch-tabs=\'always\'>         <md-tab label=\'Accueil\'>             <md-tab-body class=\'md-padding\' id=\'contentTab1Id\'>                 <div style=\'display:table\'>                     <div style=\'display:table-cell;width:40%;vertical-align:middle\'>                         <div style=\'text-align:center\' id=\'corinnepairelasjunies\'>CORINNE PAIRE LASJUNIES</div>                         <div style=\'text-align:center;color:red\' id=\'artistepeintre\'>ARTISTE PEINTRE</div>                     </div>                     <div style=\'display:table-cell;width:60%\'>                         <img ng-src=\'/pictures/f52234_a1f7f030a4c74bed8fea92e1c0baaefa.png_srb_p_600_450_75_22_0.50_1.20_0.00_png_srb.png\' style=\'max-height:100%;max-width:100%\' />                     </div>                 </div>             </md-tab-body>         </md-tab>         <md-tab label=\'Gallery\'>             <md-tab-body class=\' md-padding\' id=\'contentTab2Id\'>                  <!--1<h1 class=\'md-display-2\'>Tab Two</h1>-->                 <!--<p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>-->                 <div layout=\'row\'>                     <div layout=\'column\'>                         <!--<div ng-repeat=\'picture in vm.pictures\' style=\'width:250px;height:250px\'>                             <img ng-src=\'/pictures/{{picture}}\' alt=\'{{picture}}\' style=\'max-width:100%;max-height:100%;\' />                         </div>-->             <md-grid-list >                 <md-grid-tile ng-class=\'{\'green\':user.active,\'gray\':!user.active}\'                               ng-repeat=\'user in vm.usersView\'                               ng-click=\'vm.onClick(user._id);\'>                     {{user.email}}                     <md-grid-tile-footer>                         <h3>{{user.displayName}}</h3>                         <h3>{{user.role}}</h3>                     </md-grid-tile-footer>                 </md-grid-tile>             </md-grid-list>                     </div>                 </div>                 <!--<md-grid-list class=\'gridListdemoBasicUsage md-padding\' md-cols-sm=\'2\' md-cols-md=\'3\' md-cols-gt-md=\'5\' md-row-height-gt-md=\'1:1\' md-row-height=\'2:2\'                           md-gutter=\'5px\'>-->                 <!--</md-grid-tile>-->                 <!--</md-grid-list>-->             </md-tab-body>         </md-tab>         <md-tab label=\'Exposition/Presse\'>             <md-tab-body class=\'md-padding\' id=\'contentTab2Id\'>                 <h1 class=\'md-display-2\'>Tab Three</h1>                 <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>             </md-tab-body>         </md-tab>         <md-tab label=\'Biographie\'>             <md-tab-body class=\'md-padding\'>                 <h1 class=\'md-display-2\'>Tab Three</h1>                 <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>             </md-tab-body>         </md-tab>         <md-tab label=\'Contact\'>             <md-tab-body class=\'md-padding\'>                 <h1 class=\'md-display-2\'>Tab Three</h1>                 <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>             </md-tab-body>         </md-tab>     </md-tabs> </div>";
+    })(main = mtg.main || (mtg.main = {}));
+})(mtg || (mtg = {}));
+/// <reference path="../../typings/tsd.d.ts"/>
+/// <reference path="../../typings/webApp.d.ts"/>
+var mtg;
+(function (mtg) {
+    var main;
+    (function (main) {
+        "use strict";
+        main.mainControllerStringName = "mtg.main.MainController";
+        var MainController = (function () {
+            function MainController($rootScope, $scope, $log, $mdSidenav, picturesService, notificationService) {
+                var _this = this;
+                this.$rootScope = $rootScope;
+                this.$scope = $scope;
+                this.$log = $log;
+                this.$mdSidenav = $mdSidenav;
+                this.picturesService = picturesService;
+                this.notificationService = notificationService;
+                this.$log.debug(mtg.main.mainControllerStringName + " loaded!");
+                this.$rootScope.headerConfiguration = new mtg.header.HeaderConfiguration("", true);
+                this.$scope.$on("$destroy", function () {
+                    //clean the header bar configuration
+                    _this.$rootScope.headerConfiguration = new mtg.header.HeaderConfiguration();
+                    ;
+                });
+                picturesService.getAll().then(function (picturesFromServer) {
+                    _this.pictures = picturesFromServer.files;
+                    //////////
+                    _this.gallery.clearItems();
+                    //jQuery.each<cpla.models.Paints>( evt.value, function ( key: number, val: cpla.models.Paints ) {
+                    _this.gallery.addItem({
+                        thumbnailUrl: "",
+                        PaintId: 0,
+                        Name: "",
+                        Description: "",
+                        Year: "",
+                        PictureUrl: "",
+                        Size: "" //val.Size
+                    });
+                    //});
+                    _this.gallery.selectFirstItem();
+                    //////////
+                }).catch(function (reason) {
+                    _this.$log.warn("Error message: \n" + JSON.stringify(reason), "Cannot load pictures resources:");
+                    _this.notificationService.error("Error message: \n" + JSON.stringify(reason), "Cannot load paints resources:");
+                });
+            }
+            MainController.$inject = [
+                "$rootScope",
+                "$scope",
+                "$log",
+                "$mdSidenav",
+                "picturesService",
+                "notificationService"
+            ];
+            return MainController;
+        })();
+        main.MainController = MainController;
+        angular
+            .module("app")
+            .controller(mtg.main.mainControllerStringName, mtg.main.MainController);
+    })(main = mtg.main || (mtg.main = {}));
+})(mtg || (mtg = {}));
+/// <reference path="../../typings/tsd.d.ts"/>
+/// <reference path="../../typings/webApp.d.ts"/>
+var appState;
+(function (appState) {
+    "use strict";
+    appState.mainState = "main";
+    appState.mainUrl = "/";
+})(appState || (appState = {}));
+var mtg;
+(function (mtg) {
+    var main;
+    (function (main) {
+        "use strict";
+        route.$inject = [
+            "$stateProvider"
+        ];
+        function route($stateProvider) {
+            $stateProvider
+                .state(appState.mainState, {
+                url: appState.mainUrl,
+                views: {
+                    "header": {
+                        template: mtg.header.headerTemplate,
+                        controller: mtg.header.headerControllerStringName,
+                        controllerAs: "vm",
+                    },
+                    "container": {
+                        template: mtg.main.mainTemplate,
+                        controller: mtg.main.mainControllerStringName,
+                        controllerAs: "vm"
+                    },
+                    "footer": {}
+                }
+            });
+        }
+        ;
+        angular
+            .module("app")
+            .config(route);
+    })(main = mtg.main || (mtg.main = {}));
 })(mtg || (mtg = {}));
 var mtg;
 (function (mtg) {
@@ -1968,6 +2581,153 @@ var mtg;
             .service(mtg.users.userServiceStringName, UserService);
     })(users = mtg.users || (mtg.users = {}));
 })(mtg || (mtg = {}));
+/// <reference path="./core_misc.ts" />
+//# sourceMappingURL=/core/core_pubsub.js.map
+//TODO:
+// regarder ce que fait http://www.pubnub.com
+// 1) Create a method to trigger 1 callback when 1 one the message is arriving
+//      the method could be called raced
+//      usefull when there is a timeout expected. 1 message is related to a timeout
+// 2) Create a method to trigger 1 callback when all the message expected have been arrived
+//      this could be called meetingPoint
+// 3) Record all the message in a buffer
+//      this could be used to have a 'replay' function. We record all the messages arriving and then it's possible
+//      to 'replay' them. It could be very usefull for testing purpose / load analysis
+// 4) Compare message using diffObject
+//      To replay we should plan to change few values (objects/msg properties) in the test scenario
+//      The concept behind objectdiff could help supporting this use case
+// 5) improve usability/readability
+//      the current pub/sub is not very readable and (too?) verbose
+//          core.app.PubSub.subscribe( new MsgTestStart(), function ( MsgTestStart ) {
+//              paintsTests.test_postPaint();
+//          } );
+// 6) shoudl we create 2 message interfaces:
+//      - 1 for command : an action triggered by an actor, the message should a "verb"
+//      - and another one for events: an reaction following an actor command, the message should be an event
+// 7) identicate if the message will be used only once. If yes, then it will automatically unsubscribe after use.
+//      is it really usefull in really application (currently the remark is posted related to the test framework)
+//
+var core;
+(function (core) {
+    var pubsub;
+    (function (pubsub) {
+        var Thread = (function () {
+            function Thread() {
+                this.callbacks = [];
+            }
+            return Thread;
+        })();
+        pubsub.Thread = Thread;
+        var CallBackSubscribbed = (function () {
+            function CallBackSubscribbed(callback, args) {
+                this.once = false;
+                this.guid = core.misc.GUID_new();
+                this.callback = callback;
+                //    if ( args ) { this.args = args; }
+            }
+            return CallBackSubscribbed;
+        })();
+        pubsub.CallBackSubscribbed = CallBackSubscribbed;
+        var PubSubToken = (function () {
+            //constructor( public thread: string, public callback: ( msg: IPubSubMsg ) => void ) {}
+            function PubSubToken(thread, guid) {
+                this.thread = thread;
+                this.guid = guid;
+            }
+            return PubSubToken;
+        })();
+        pubsub.PubSubToken = PubSubToken;
+        var PubSub = (function () {
+            //        subscribe( msg: IPubSubMsg, callback: ( msg: IPubSubMsg, args?: any[] ) => void , args?: any[]  ): PubSubToken {
+            function PubSub() {
+                //private _journal: models.journal.Journal;
+                this._threads = [];
+                //this._journal = new models.journal.Journal();
+            }
+            /**
+            * Regsiter a callback function to a IPubSubMsg. When the message will be published the function will be called by the framework
+            *
+            * @Param msg a IPubSubMsg class .... e.i.: new cmdLoadPagePaints()
+            * @Param the function to callback ... e.i: function ( evt: evtTestFinished )
+            * @Param PubSubToken ... unique number of the registration in order to unresgister
+            */
+            PubSub.prototype.subscribe = function (msg, callback) {
+                //is a new thread?
+                var thread = core.misc.getObjectClass(msg);
+                if (!this._threads[thread]) {
+                    this._threads[thread] = new Thread();
+                }
+                //Add the callback to the thread
+                var t = this._threads[thread];
+                //var cb = new CallBackSubscribbed( callback,args);
+                var cb = new CallBackSubscribbed(callback);
+                t.callbacks.push(cb);
+                //this._threads[thread].subscribed.push( callback );
+                return new PubSubToken(thread, cb.guid);
+            };
+            //subscribeOnce( msg: IPubSubMsg, callback: ( msg: IPubSubMsg, args?: any[] ) => void , args?: any[] ): void {
+            PubSub.prototype.subscribeOnce = function (msg, callback) {
+                //var token = this.subscribe( msg, callback, args );
+                var token = this.subscribe(msg, callback);
+                //Change the behavior of the callback
+                if (this._threads[token.thread]) {
+                    var thread = this._threads[token.thread];
+                    var len = thread.callbacks.length;
+                    while (len--) {
+                        if (thread.callbacks[len].guid === token.guid) {
+                            thread.callbacks[len].once = true;
+                        }
+                    }
+                }
+            };
+            PubSub.prototype.unsubscribe = function (token) {
+                //does the thread exists?
+                if (this._threads[token.thread]) {
+                    var thread = this._threads[token.thread];
+                    var len = thread.callbacks.length;
+                    while (len--) {
+                        if (thread.callbacks[len].guid === token.guid) {
+                            thread.callbacks.splice(len, 1);
+                        }
+                    }
+                }
+            };
+            PubSub.prototype.publish = function (msg) {
+                //journalize the message
+                //this._journal.journalise( msg );
+                //treat the message
+                var sThread = core.misc.getObjectClass(msg);
+                if (this._threads[sThread]) {
+                    var oThread = this._threads[sThread];
+                    var len = oThread.callbacks.length;
+                    while (len--) {
+                        //core.Logger.log( "PubSub.BeforeCall - " + JSON.stringify( oThread.callbacks[len].callback ) + "... args:" + JSON.stringify( oThread.callbacks[len].args ));
+                        if (oThread.callbacks[len].args) {
+                            oThread.callbacks[len].callback(msg, oThread.callbacks[len].args);
+                        }
+                        else {
+                            oThread.callbacks[len].callback(msg);
+                        }
+                        if (oThread.callbacks[len].once) {
+                            //core.Logger.log("PubSub.RemoveOnceMessages")
+                            oThread.callbacks.splice(len, 1);
+                        }
+                    }
+                }
+            };
+            return PubSub;
+        })();
+        pubsub.PubSub = PubSub;
+    })(pubsub = core.pubsub || (core.pubsub = {}));
+})(core || (core = {}));
+//# sourceMappingURL=/core/core_pubsub.js.map
+var mtg;
+(function (mtg) {
+    var core;
+    (function (core) {
+        core.testTemplate = "";
+    })(core = mtg.core || (mtg.core = {}));
+})(mtg || (mtg = {}));
 /// <reference path="../typings/tsd.d.ts"/>
 /// <reference path="../typings/webApp.d.ts"/>
 var appRootScopeEvent;
@@ -2072,756 +2832,5 @@ var mtg;
 /// <reference path='../web/register/validateEqualsDirective.ts' />
 /// <reference path='../web/users/usersRoute.ts' />
 //} 
-// /// <reference path="core/core_pubsub.ts" />
-// /// <reference path="core/core.ts" />
-// /// <reference path="core/core_restAPI.ts" />
-// /// <reference path="libs/typings/jquery/jquery.d.ts" />
-// /// <reference path="libs/typings/jquery.RL.d.ts" />
-// /// <reference path="carrousel.ts"/>     
-// 
-// //ajouter le caroussel sur labiographie
-// //voir si on peut monter les boutons
-// //voir si on peut changer les couleurs
-//     // des boutons
-//     // ou contranste du fond
-// //mettre le détail en fixe
-// //Vignette
-//     //carré sans distorsion   
-// 
-// // class cmdLoadPaints implements core.pubsub.IPubSubMsg { };
-// // class evtPaintsLoaded implements core.pubsub.IPubSubMsg { };
-// // 
-// // class cmdLoadBiography implements core.pubsub.IPubSubMsg { };
-// // //class evtBiographyLoaded implements core.pubsub.IPubSubMsg { };
-// // 
-// // 
-// // class cmdLoadPaint implements core.pubsub.IPubSubMsg { constructor( public paintId: string ) { } };
-// // class evtPaintLoaded implements core.pubsub.IPubSubMsg { constructor( public paint: models.paints.Paint ) { } };
-// // 
-// // class cmdUpdatePaint implements core.pubsub.IPubSubMsg { constructor( public paintId: string ) { } };
-// // class evtPaintUpdated implements core.pubsub.IPubSubMsg { constructor( public paint: models.paints.Paint ) { } };
-// // 
-// // class cmdJumpToPage_AboutMe implements core.pubsub.IPubSubMsg { };
-// // //class evtPageShowned_AboutMe implements core.pubsub.IPubSubMsg { };
-// // 
-// // class cmdJumpToPage_Paints implements core.pubsub.IPubSubMsg { };
-// // //class evtPageShowned_Paints implements core.pubsub.IPubSubMsg { };
-// // 
-// // class cmdJumpToPage_News implements core.pubsub.IPubSubMsg { };
-// // class cmdJumpToPage_ContactMe implements core.pubsub.IPubSubMsg { };
-// // 
-// // class cmdShowPaint implements core.pubsub.IPubSubMsg { constructor( public item: caroussel.IGalleryItem ) { } };
-// // 
-// // //class cmdImageDetailQuit implements core.pubsub.IPubSubMsg { };
-// // 
-// // 
-// // var $imgScroller: JQuery;
-// // gApp = new core.App();
-// // 
-// // window.onload = () => {
-// //     
-// //     gApp.PubSub.subscribe( new cmdLoadPaints, function ( cmdLoadPaint ) {
-// //         var ps: models.paints.Paints;
-// //         ps = new models.paints.Paints();
-// //         $.mobile.loading( 'show' );
-// //         ps.getAll();
-// //     });
-// 
-// 
-//     //gApp.PubSub.subscribe( new cmdShowPaint( null ), function ( evt: cmdShowPaint) {
-//     //   //alert( "Paint clicked:" + evt.item.thumbnailUrl );
-// 
-//     //});
-// 
-//     //gApp.PubSub.subscribe( new models.paints.evtPaintsGetted( null, null, null ), function ( evt: models.paints.evtPaintsGetted ) {
-//     //    if ( evt.error ) {
-//     //        alert( "error: loading the paintings data!!:" + evt.error );
-//     //    } else {
-//     //        var items = [];
-// 
-//     //        $car.clearItems();
-// 
-//     //        jQuery.each<cpla.models.Paints>( evt.value, function ( key: number, val: cpla.models.Paints ) {
-//     //            var strOnClick = [
-//     //                "var $a = $( this );",
-//     //                "var p = JSON.parse( $a.data(\"paint\"));",
-//     //                "gApp.PubSub.publish( new cmdJumpToPage_ImageDetail( p ) );"
-//     //            ].join( " " );
-//     //            var strA = [
-//     //                //ok mais background different de image"<a href='#' style=\"background-image:url('" + val.Thumbnail +"')\" onclick=' var $a = $(this); var p = JSON.parse($a.data(\"paint\")); gApp.PubSub.publish( new cmdJumpToPage_ImageDetail(p) );'>" +
-//     //                "<a href='#' onclick='" + strOnClick + "'>",
-//     //                "<img src ='" + val.Thumbnail + "' class='myThumb'/> ",
-//     //                //"<div class= 'myThumb' style=\"background-image:url('" + val.Thumbnail +"')\"></div>" + 
-//     //                "<h2>" + val.Name + "</h2>",
-//     //                "<p class='ui-li-aside'>" + val.Description + "</p>",
-//     //                "</a>"
-//     //            ].join( " " );
-//     //            var $a = $( strA );
-//     //            $a.data( "paint", JSON.stringify( val ) );
-//     //            var $li = $( "<li></li>" );
-//     //            $li.prepend( $a );
-//     //            items.push( $li );
-// 
-//     //            $car.addItem( {
-//     //                thumbnailUrl: val.Thumbnail
-//     //            });
-// 
-//     //        });
-//     //        //$( "#listPaints" ).html( items ).listview( "refresh" );
-//     //        //resizeMyThumb();
-//     //    }
-//     //    $.mobile.loading( 'hide' );
-//     //});
-// // 
-// //     gApp.PubSub.subscribe( new models.paints.evtPaintsGetted( null, null, null ), function ( evt: models.paints.evtPaintsGetted ) {
-// //         if ( evt.error ) {
-// //             alert( "error: loading the paintings data!!:" + evt.error );
-// //         } else {
-// //             var items = [];
-// // 
-// //             gallery.clearItems();
-// // 
-// //             jQuery.each<cpla.models.Paints>( evt.value, function ( key: number, val: cpla.models.Paints ) {
-// // 
-// //                     gallery.addItem( {
-// //                         thumbnailUrl: val.Thumbnail,
-// //                         PaintId: val.PaintId,
-// //                         Name: val.Name,
-// //                         Description: val.Description,
-// //                         Year: val.Year,
-// //                         PictureUrl: val.Picture,
-// //                         Size: val.Size    
-// //                 });
-// // 
-// //             });
-// // 
-// //             gallery.selectFirstItem();      
-// //         }
-// //         $.mobile.loading( 'hide' );
-// //     });
-// 
-// //     gApp.PubSub.subscribe( new cmdJumpToPage_Paints, function ( cmdJumpToPage_Paints ) {
-// //         //$.mobile.changePage( "#pagePaints" );
-// //         $.mobile.changePage( "#pageImageDetail" );
-// //     });
-// // 
-// //     gApp.PubSub.subscribe( new cmdJumpToPage_AboutMe, function ( cmdJumpToPage_AboutMe ) {
-// //         $.mobile.changePage( "#pageMe" );
-// //     });
-// // 
-// //     gApp.PubSub.subscribe( new cmdJumpToPage_News, function ( cmdJumpToPage_Events ) {
-// //         $.mobile.changePage( "#pageNews" );
-// //     });
-// // 
-// //     gApp.PubSub.subscribe( new cmdJumpToPage_ContactMe, function () {
-// //         $.mobile.changePage( "#pageContactMe" );
-// //     });
-// // 
-// //     gApp.PubSub.subscribe( new cmdLoadBiography, function ( cmdLoadBiography ) {
-// //         var bio: models.aboutMes.AboutMes;
-// //         bio = new models.aboutMes.AboutMes();
-// //         $.mobile.loading( 'show' );
-// //         bio.get();
-// //     });
-// 
-// //     gApp.PubSub.subscribe( new models.aboutMes.evtBiographyGetted( null, null, null ), function ( evt: models.aboutMes.evtBiographyGetted ) {
-// //         if ( evt.error ) {
-// //             alert( "error: loading the paintings data!!:" + evt.error );
-// //         } else {
-// //             $( '#biography' ).html( evt.value.Biographie );
-// //         }
-// //         $.mobile.loading( 'hide' );
-// //     });
-// // 
-// //     $( "#pagePaints" ).on( "pageshow", function ( evt: JQueryEventObject ) {
-// //         gApp.PubSub.publish( new cmdLoadPaints() );
-// //         //alert( "paint shown" );
-// //     });
-// // 
-// //     $( "#pageMe" ).on( "pageshow", function ( evt: JQueryEventObject ) {
-// //         gApp.PubSub.publish( new cmdLoadBiography() );
-// //         //alert( "me shown" );
-// //     });
-// 
-//     //$( "#pageMe" ).trigger( "pageshow" );// mobile.changePage( "#pageMe" );
-//     //$( "#pageImageDetail" ).trigger( "pagebeforeshow" );
-//     //$( "#pageImageDetail" ).trigger( "pageshow" );
-// 
-//     //The first page is already loaded, I manually trigger the load of the paints
-// //     gApp.PubSub.publish( new cmdLoadPaints() );
-// // 
-// // }
-// 
-// 
-// //    var infiniteLoopRunning: boolean = false;       
-// 
-// // var gallery: caroussel.Gallery;
-// 
-// $( "#pageImageDetail" ).on( "pageshow", function ( evt: JQueryEventObject ) {
-// 
-//     if ( gallery == undefined ) {
-// 
-//         //calculate the dimensions
-//         var windowHeight = $( window ).height(); //Get available screen height, not including any browser chrome
-//         var headerHeight = $( '#pageImageDetailHeader' ).outerHeight() + 1; //Get height of page header
-//         var $footer = $( '#pageImageDetailFooter' );
-//         var footerHeight = $footer.outerHeight(); // I do not know why 20 is mising Get height of page header
-//         var $pageContent = $( '#pageImageDetailContent' );
-//         var pageContentPaddingTop = parseInt( $( this ).css( "padding-top" ).replace( "px", "" ) );
-//         var pageContentPaddingBottom = pageContentPaddingTop // ne retourne pas de valeur ?? parseInt( $pageContent.css( "padding-bottom" ).replace( "px", "" ) );
-//         var winContentHeight = windowHeight - headerHeight - footerHeight - pageContentPaddingTop - pageContentPaddingBottom; //Calculate out new height (-2 if you have a 1px border on content container)
-// 
-//         // //define the place for the "graphical object
-//         // $pageContent.width( $( window ).width() );
-//         // $pageContent.height( winContentHeight );
-//         // $pageContent.css( 'top', headerHeight + 'px' );
-// 
-//         //create the "dynamic object"
-//         gallery = new caroussel.Gallery( $( '#gallery' ) );
-// 
-//         //define events on the objects
-//         gallery.onItemClick.add( function ( item: caroussel.IGalleryItem ) {
-//             gApp.PubSub.publish( new cmdShowPaint( item ) );
-//         });
-// 
-//         //request load paintings
-//         // if ( gApp != undefined ) gApp.PubSub.publish( new cmdLoadPaints() );
-//         // else alert( "gApp undefined!" );
-//     }
-// });
-// 
-var core;
-(function (core) {
-    var image;
-    (function (image) {
-        (function (enumImageResizeMode) {
-            enumImageResizeMode[enumImageResizeMode["fit_vertically"] = 0] = "fit_vertically";
-            enumImageResizeMode[enumImageResizeMode["fit_horizontal"] = 1] = "fit_horizontal";
-            enumImageResizeMode[enumImageResizeMode["fit_vh"] = 2] = "fit_vh";
-            enumImageResizeMode[enumImageResizeMode["square"] = 3] = "square";
-        })(image.enumImageResizeMode || (image.enumImageResizeMode = {}));
-        var enumImageResizeMode = image.enumImageResizeMode;
-        function fitImageInContainer($img, maxWidth, maxHeight, mode, centerInParent) {
-            centerInParent = centerInParent == undefined ? false : centerInParent;
-            var newImg = new Image();
-            newImg.onload = function () {
-                var coeffHeight = maxHeight / newImg.height;
-                var coeffWidth = maxWidth / newImg.width;
-                //var coeff = coeffHeight < coeffWidth ? coeffHeight : coeffWidth;
-                var coeff = Math.min(coeffHeight, coeffWidth);
-                if (mode == enumImageResizeMode.fit_vh) {
-                    if (coeff < 1) {
-                        $img.height($img.height() * coeff);
-                    }
-                    else {
-                        $img.height(newImg.height);
-                        $img.width(newImg.width);
-                    }
-                    ;
-                }
-                else if (mode == enumImageResizeMode.fit_vertically) {
-                    $img.height($img.height() * coeffHeight);
-                }
-                else if (mode == enumImageResizeMode.fit_horizontal) {
-                    $img.width($img.width() * coeffWidth);
-                }
-                if (centerInParent) {
-                    $img.css("left", (maxWidth - $img.width()) / 2 + 'px');
-                    $img.css("top", (maxHeight - $img.height()) / 2 + 'px');
-                }
-                $img.css("visibility", "visible");
-            };
-            newImg.src = $img.attr('src'); // this must be done AFTER setting onload
-        }
-        image.fitImageInContainer = fitImageInContainer;
-    })(image = core.image || (core.image = {}));
-})(core || (core = {}));
-//// Exposing events
-//interface IMessageEvent extends IEvent {
-//    add( listener: ( message: string ) => void ): void;
-//    remove( listener: ( message: string ) => void ): void;
-//    trigger( message: string ): void;
-//}
-//class Foo {                                                      
-//    // Events
-//    public onMessage: IMessageEvent = new TypedEvent();
-//    // Methods
-//    public bar(): void {
-//        this.onMessage.trigger( 'event fired' );
-//    }
-//}
-//// Consuming events
-//var foo = new Foo();
-//foo.onMessage.add( ( message ) => {
-//    alert( message );
-//});
-//foo.bar();
-var core;
-(function (core) {
-    var event;
-    (function (event) {
-        var TypedEvent = (function () {
-            function TypedEvent() {
-                // Private member vars
-                this._listeners = [];
-            }
-            TypedEvent.prototype.add = function (listener) {
-                /// <summary>Registers a new listener for the event.</summary>
-                /// <param name="listener">The callback function to register.</param>
-                this._listeners.push(listener);
-            };
-            TypedEvent.prototype.remove = function (listener) {
-                /// <summary>Unregisters a listener from the event.</summary>
-                /// <param name="listener">The callback function that was registered. If missing then all listeners will be removed.</param>
-                if (typeof listener === 'function') {
-                    for (var i = 0, l = this._listeners.length; i < l; l++) {
-                        if (this._listeners[i] === listener) {
-                            this._listeners.splice(i, 1);
-                            break;
-                        }
-                    }
-                }
-                else {
-                    this._listeners = [];
-                }
-            };
-            TypedEvent.prototype.trigger = function () {
-                var a = [];
-                for (var _i = 0; _i < arguments.length; _i++) {
-                    a[_i - 0] = arguments[_i];
-                }
-                /// <summary>Invokes all of the listeners for this event.</summary>
-                /// <param name="args">Optional set of arguments to pass to listners.</param>
-                var context = {};
-                var listeners = this._listeners.slice(0);
-                for (var i = 0, l = listeners.length; i < l; i++) {
-                    listeners[i].apply(context, a || []);
-                }
-            };
-            return TypedEvent;
-        })();
-        event.TypedEvent = TypedEvent;
-    })(event = core.event || (core.event = {}));
-})(core || (core = {}));
-var core;
-(function (core) {
-    var misc;
-    (function (misc) {
-        (function (enumEntityStatus) {
-            enumEntityStatus[enumEntityStatus["success"] = 0] = "success";
-            enumEntityStatus[enumEntityStatus["failed"] = 1] = "failed";
-        })(misc.enumEntityStatus || (misc.enumEntityStatus = {}));
-        var enumEntityStatus = misc.enumEntityStatus;
-        (function (eLogSeverity) {
-            eLogSeverity[eLogSeverity["critical"] = 0] = "critical";
-            eLogSeverity[eLogSeverity["warning"] = 1] = "warning";
-            eLogSeverity[eLogSeverity["information"] = 2] = "information";
-        })(misc.eLogSeverity || (misc.eLogSeverity = {}));
-        var eLogSeverity = misc.eLogSeverity;
-        /* Returns the class name of the argument or undefined if
-       it's not a valid JavaScript object.
-        */
-        function getObjectClass(obj) {
-            if (obj && obj.constructor && obj.constructor.toString) {
-                var arr = obj.constructor.toString().match(/function\s*(\w+)/);
-                if (arr && arr.length == 2) {
-                    return arr[1];
-                }
-            }
-            return undefined;
-        }
-        misc.getObjectClass = getObjectClass;
-        function GUID_new() {
-            var guid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
-                var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-                return v.toString(16);
-            });
-            return guid;
-        }
-        misc.GUID_new = GUID_new;
-        ;
-    })(misc = core.misc || (core.misc = {}));
-})(core || (core = {}));
-/// <reference path="./core/core_image.ts" />
-/// <reference path="./core/core_event.ts" />
-/// <reference path="./core/core_misc.ts" />
-/// <reference path="../../typings/tsd.d.ts"/>
-var caroussel;
-(function (caroussel) {
-    (function (enumViewerDetail_visibility) {
-        enumViewerDetail_visibility[enumViewerDetail_visibility["show_always"] = 0] = "show_always";
-        enumViewerDetail_visibility[enumViewerDetail_visibility["appears_adn_disappears"] = 1] = "appears_adn_disappears";
-        enumViewerDetail_visibility[enumViewerDetail_visibility["hide"] = 2] = "hide";
-    })(caroussel.enumViewerDetail_visibility || (caroussel.enumViewerDetail_visibility = {}));
-    var enumViewerDetail_visibility = caroussel.enumViewerDetail_visibility;
-    var ImageViewer = (function () {
-        function ImageViewer(imageViewer, param) {
-            this.$me = imageViewer;
-            this.DEFAULT_SETTINGS = {
-                top: parseInt(this.$me.parent().css('top').replace("px", "")),
-                left: parseInt(this.$me.parent().css('left').replace("px", "")) + 150,
-                height: this.$me.parent().height(),
-                width: this.$me.parent().width() - 150,
-                viewerDetail: {
-                    visibility: enumViewerDetail_visibility.show_always,
-                    height: this.$me.parent().height(),
-                    width: 200,
-                }
-            };
-            if (param != undefined && param.top != undefined)
-                this.DEFAULT_SETTINGS.top = param.top;
-            if (param != undefined && param.left != undefined)
-                this.DEFAULT_SETTINGS.left = param.left;
-            if (param != undefined && param.height != undefined)
-                this.DEFAULT_SETTINGS.height = param.height;
-            if (param != undefined && param.width != undefined)
-                this.DEFAULT_SETTINGS.width = param.width;
-            if (param != undefined && param.viewerDetail != undefined) {
-                if (param != undefined && param.viewerDetail != undefined && param.viewerDetail.visibility != undefined)
-                    this.DEFAULT_SETTINGS.viewerDetail.visibility = param.viewerDetail.visibility;
-                if (param != undefined && param.viewerDetail != undefined && param.viewerDetail.height != undefined)
-                    this.DEFAULT_SETTINGS.viewerDetail.height = param.viewerDetail.height;
-                if (param != undefined && param.viewerDetail != undefined && param.viewerDetail.width != undefined)
-                    this.DEFAULT_SETTINGS.viewerDetail.width = param.viewerDetail.width;
-            }
-            this.$me.css("top", this.DEFAULT_SETTINGS.top);
-            this.$me.css("left", this.DEFAULT_SETTINGS.left);
-            this.$me.width(this.DEFAULT_SETTINGS.width);
-            this.$me.height(this.DEFAULT_SETTINGS.height);
-            this.$img = $("<img id='carousselImageViewer' class='carousselImageViewer' style='position:absolute;background-color=pink'/>");
-            this.$me.append(this.$img);
-            //TODO Delegate the HTML creation to calling component
-            var $imgDetailsHTML = $(["<div id='carousselImageViewerDetail' class='carousselImageViewerDetail flyout hidden' style='position:absolute;background-color=green'>",
-                //"<div data - role='fieldcontain' class='ui-hide-label'>",
-                //                            "<label for='name'>Nom:</label>",
-                //"<input type='text' disabled='disabled' style='float: left' name='name' id='name' value='' placeholder='NomPlaceHolder'/>",
-                //"<label for='description'>Description:</label>",
-                //"<input type='text' disabled='disabled' style='float: left' name='description' id='description' value='' placeholder='DescriptionPLaceHolder'/>",
-                "<p>Nom:</p><p id='name'></p>",
-                "<p>Description:</p><p id='description'></p > ",
-                //"</div>",
-                "</div>"].join(""));
-            this.$imgDetails = this.$me.append($imgDetailsHTML);
-            $imgDetailsHTML.css("top", parseInt(this.$me.css("top").replace("px", "")));
-            $imgDetailsHTML.css("left", parseInt(this.$me.css('left').replace('px', '')) + this.$me.width() - this.DEFAULT_SETTINGS.viewerDetail.width);
-            $imgDetailsHTML.width(this.DEFAULT_SETTINGS.width);
-            $imgDetailsHTML.height(this.DEFAULT_SETTINGS.height);
-        }
-        ImageViewer.prototype.source = function (url) {
-            var _this = this;
-            this.$img.fadeOut(250, function () {
-                //this.$imgViewer.attr( "visibility", "hidden" );
-                _this.$img.attr("src", url);
-                core.image.fitImageInContainer(_this.$img, _this.$me.width(), _this.$me.height(), core.image.enumImageResizeMode.fit_vh, true);
-                _this.$img.fadeIn(250);
-                $('#carousselImageViewerDetail').removeClass('hidden');
-                setTimeout(function () {
-                    $('#carousselImageViewerDetail').addClass('hidden');
-                }, 2000);
-            });
-        };
-        return ImageViewer;
-    })();
-    caroussel.ImageViewer = ImageViewer;
-    var Carrousel = (function () {
-        function Carrousel($caroussel, param) {
-            var _this = this;
-            this.$me = $caroussel;
-            this.$roller = $("<div id='roller' style='overflow:hidden; position:absolute; background-color:yellow'></div>");
-            this.$me.append(this.$roller);
-            this.DEFAULT_SETTINGS = {
-                top: parseInt(this.$me.parent().css("top").replace("px", "")),
-                left: parseInt(this.$me.parent().css("left").replace("px", "")),
-                height: this.$me.parent().height(),
-                width: 150,
-                thumbnailWidth: 150,
-                ArrowUP: {
-                    text: 'GO UP',
-                    height: 50,
-                },
-                ArrowDOWN: {
-                    text: 'GO DOWN',
-                    height: 50,
-                },
-            };
-            if (param != undefined && param.top != undefined)
-                this.DEFAULT_SETTINGS.top = param.top;
-            if (param != undefined && param.left != undefined)
-                this.DEFAULT_SETTINGS.left = param.left;
-            //if ( param != undefined && param.thumbnailWidth != undefined ) this.DEFAULT_SETTINGS.thumbnailWidth = param.thumbnailWidth;
-            if (param != undefined && param.height != undefined)
-                this.DEFAULT_SETTINGS.height = param.height;
-            if (param != undefined && param.width != undefined)
-                this.DEFAULT_SETTINGS.width = param.width;
-            if (param != undefined && param.ArrowUP != undefined) {
-                if (param != undefined && param.ArrowUP != undefined && param.ArrowUP.text != undefined)
-                    this.DEFAULT_SETTINGS.ArrowUP.text = param.ArrowUP.text;
-                if (param != undefined && param.ArrowUP != undefined && param.ArrowUP.height != undefined)
-                    this.DEFAULT_SETTINGS.ArrowUP.height = param.ArrowUP.height;
-            }
-            if (param != undefined && param.ArrowDOWN != undefined) {
-                if (param != undefined && param.ArrowDOWN != undefined && param.ArrowDOWN.text != undefined)
-                    this.DEFAULT_SETTINGS.ArrowDOWN.text = param.ArrowDOWN.text;
-                if (param != undefined && param.ArrowDOWN != undefined && param.ArrowDOWN.height != undefined)
-                    this.DEFAULT_SETTINGS.ArrowDOWN.height = param.ArrowDOWN.height;
-            }
-            this.$me.css("top", this.DEFAULT_SETTINGS.top);
-            this.$me.css("left", this.DEFAULT_SETTINGS.left);
-            this.$me.height(this.DEFAULT_SETTINGS.height);
-            this.$me.width(this.DEFAULT_SETTINGS.width);
-            var $ArrowUP = $("<div id='" + core.misc.GUID_new() + "' class='flyout hidden'><p align='center'>" + this.DEFAULT_SETTINGS.ArrowUP.text + "</p></div>");
-            var $ArrowDOWN = $("<div id='" + core.misc.GUID_new() + "' class='flyout hidden'><p align='center'>" + this.DEFAULT_SETTINGS.ArrowDOWN.text + "</p></div>");
-            //Add ArrowUP
-            this.$me.parent().append($ArrowUP);
-            $ArrowUP.css("top", this.DEFAULT_SETTINGS.top); // + this.DEFAULT_SETTINGS.padding);
-            $ArrowUP.css("left", this.DEFAULT_SETTINGS.left); // + this.DEFAULT_SETTINGS.padding );
-            $ArrowUP.height(this.DEFAULT_SETTINGS.ArrowUP.height);
-            $ArrowUP.width(this.DEFAULT_SETTINGS.width); // + pageContentPaddingLeft + pageContentPaddingRight );
-            //Add ArrowDOWN
-            this.$me.parent().append($ArrowDOWN);
-            $ArrowDOWN.css("top", this.DEFAULT_SETTINGS.height - this.DEFAULT_SETTINGS.ArrowDOWN.height); // + this.DEFAULT_SETTINGS.top + this.DEFAULT_SETTINGS.padding * 2);
-            $ArrowDOWN.css("left", this.DEFAULT_SETTINGS.left); // + this.DEFAULT_SETTINGS.padding);
-            $ArrowDOWN.height(this.DEFAULT_SETTINGS.ArrowDOWN.height);
-            $ArrowDOWN.width(this.DEFAULT_SETTINGS.width); // + pageContentPaddingLeft + pageContentPaddingRight );
-            this.$me.hover(function () {
-                $ArrowUP.removeClass('hidden');
-                $ArrowDOWN.removeClass('hidden');
-            }, function () {
-                $ArrowUP.addClass('hidden');
-                $ArrowDOWN.addClass('hidden');
-            });
-            //important to do it after the ilgViewer creation because there are some .flyout classes
-            $(".flyout").hover(function () {
-                $(".flyout").removeClass('hidden');
-            }, function () {
-                $(".flyout").addClass('hidden');
-            });
-            this.$roller.kinetic();
-            this.$roller.css("top", 0);
-            this.$roller.css("left", 0);
-            this.$roller.height(this.DEFAULT_SETTINGS.height);
-            this.$roller.width(this.DEFAULT_SETTINGS.width);
-            $ArrowUP.on('mousedown', function (evt) {
-                _this.$roller.kinetic("start", { velocityY: -10 });
-            });
-            $ArrowUP.on('mouseup', function (evt) {
-                _this.$roller.kinetic("end");
-            });
-            $ArrowDOWN.on('mousedown', function (evt) {
-                _this.$roller.kinetic("start", { velocityY: 10 });
-            });
-            $ArrowDOWN.on('mouseup', function (evt) {
-                _this.$roller.kinetic("end");
-            });
-        }
-        return Carrousel;
-    })();
-    caroussel.Carrousel = Carrousel;
-    var Gallery = (function () {
-        function Gallery($gallery, param) {
-            this.onItemClick = new core.event.TypedEvent();
-            this.$me = $gallery;
-            this.DEFAULT_SETTINGS = {
-                top: 0,
-                left: 0,
-                height: this.$me.parent().height(),
-                width: this.$me.parent().width(),
-                padding: 10,
-            };
-            //if ( param != undefined ) {
-            if (param != undefined && param.top != undefined)
-                this.DEFAULT_SETTINGS.top = param.top;
-            if (param != undefined && param.left != undefined)
-                this.DEFAULT_SETTINGS.left = param.left;
-            if (param != undefined && param.height != undefined)
-                this.DEFAULT_SETTINGS.height = param.height;
-            if (param != undefined && param.width != undefined)
-                this.DEFAULT_SETTINGS.width = param.width;
-            //if ( param.padding != undefined ) this.DEFAULT_SETTINGS.padding = param.padding;
-            //}
-            $gallery.attr('style', 'overflow:hidden; position:absolute; background-color:red;');
-            $gallery.css("top", this.DEFAULT_SETTINGS.top);
-            $gallery.css("left", this.DEFAULT_SETTINGS.left);
-            $gallery.height(this.DEFAULT_SETTINGS.height);
-            $gallery.width(this.DEFAULT_SETTINGS.width);
-            var $caroussel = $("<div id='caroussel' style='background-color:blue'></div>");
-            $gallery.append($caroussel);
-            this.caroussel = new Carrousel($caroussel);
-            var $imgViewer = $("<div></div>");
-            $gallery.append($imgViewer);
-            this.imageViewer = new ImageViewer($imgViewer);
-        }
-        Gallery.prototype.addItem = function (item) {
-            //if ( item.thumbnailwidth == undefined ) item.thumbnailwidth = this.DEFAULT_SETTINGS.thumbnailWidth;
-            var _this = this;
-            var $img = $("<img id ='" + core.misc.GUID_new() + "' class ='carousselItem' style='visibility:hidden;' src='" + item.thumbnailUrl + "'/>");
-            fitImageInContainer($img, 150, 150, enumImageResizeMode.fit_vh);
-            $img.css("visibility", "visible");
-            $img.on('click', function (evt) {
-                _this.imageViewer.source(item.PictureUrl);
-                //TODO delegate the feeding/rendering of the viewer detail
-                $(".carousselImageViewerDetail #name").html("<b>" + item.Name + "</b>");
-                $(".carousselImageViewerDetail #description").html("<b>" + item.Description + "</b>");
-            });
-            this.caroussel.$roller.append($img);
-        };
-        Gallery.prototype.clearItems = function () {
-            //delete all the items in the roller           
-            this.caroussel.$roller.empty();
-        };
-        Gallery.prototype.selectFirstItem = function () {
-            //console.log( "id img:" + this.$roller.find( ":first-child" ).attr( "id" ) );
-            this.caroussel.$roller.find(":first-child").trigger('click');
-        };
-        return Gallery;
-    })();
-    caroussel.Gallery = Gallery;
-})(caroussel || (caroussel = {}));
-/// <reference path="./core_misc.ts" />
-//# sourceMappingURL=/core/core_pubsub.js.map
-//TODO:
-// regarder ce que fait http://www.pubnub.com
-// 1) Create a method to trigger 1 callback when 1 one the message is arriving
-//      the method could be called raced
-//      usefull when there is a timeout expected. 1 message is related to a timeout
-// 2) Create a method to trigger 1 callback when all the message expected have been arrived
-//      this could be called meetingPoint
-// 3) Record all the message in a buffer
-//      this could be used to have a 'replay' function. We record all the messages arriving and then it's possible
-//      to 'replay' them. It could be very usefull for testing purpose / load analysis
-// 4) Compare message using diffObject
-//      To replay we should plan to change few values (objects/msg properties) in the test scenario
-//      The concept behind objectdiff could help supporting this use case
-// 5) improve usability/readability
-//      the current pub/sub is not very readable and (too?) verbose
-//          core.app.PubSub.subscribe( new MsgTestStart(), function ( MsgTestStart ) {
-//              paintsTests.test_postPaint();
-//          } );
-// 6) shoudl we create 2 message interfaces:
-//      - 1 for command : an action triggered by an actor, the message should a "verb"
-//      - and another one for events: an reaction following an actor command, the message should be an event
-// 7) identicate if the message will be used only once. If yes, then it will automatically unsubscribe after use.
-//      is it really usefull in really application (currently the remark is posted related to the test framework)
-//
-var core;
-(function (core) {
-    var pubsub;
-    (function (pubsub) {
-        var Thread = (function () {
-            function Thread() {
-                this.callbacks = [];
-            }
-            return Thread;
-        })();
-        pubsub.Thread = Thread;
-        var CallBackSubscribbed = (function () {
-            function CallBackSubscribbed(callback, args) {
-                this.once = false;
-                this.guid = core.misc.GUID_new();
-                this.callback = callback;
-                //    if ( args ) { this.args = args; }
-            }
-            return CallBackSubscribbed;
-        })();
-        pubsub.CallBackSubscribbed = CallBackSubscribbed;
-        var PubSubToken = (function () {
-            //constructor( public thread: string, public callback: ( msg: IPubSubMsg ) => void ) {}
-            function PubSubToken(thread, guid) {
-                this.thread = thread;
-                this.guid = guid;
-            }
-            return PubSubToken;
-        })();
-        pubsub.PubSubToken = PubSubToken;
-        var PubSub = (function () {
-            //        subscribe( msg: IPubSubMsg, callback: ( msg: IPubSubMsg, args?: any[] ) => void , args?: any[]  ): PubSubToken {
-            function PubSub() {
-                this._threads = [];
-                this._journal = new models.journal.Journal();
-            }
-            /**
-            * Regsiter a callback function to a IPubSubMsg. When the message will be published the function will be called by the framework
-            *
-            * @Param msg a IPubSubMsg class .... e.i.: new cmdLoadPagePaints()
-            * @Param the function to callback ... e.i: function ( evt: evtTestFinished )
-            * @Param PubSubToken ... unique number of the registration in order to unresgister
-            */
-            PubSub.prototype.subscribe = function (msg, callback) {
-                //is a new thread?
-                var thread = core.misc.getObjectClass(msg);
-                if (!this._threads[thread]) {
-                    this._threads[thread] = new Thread();
-                }
-                //Add the callback to the thread
-                var t = this._threads[thread];
-                //var cb = new CallBackSubscribbed( callback,args);
-                var cb = new CallBackSubscribbed(callback);
-                t.callbacks.push(cb);
-                //this._threads[thread].subscribed.push( callback );
-                return new PubSubToken(thread, cb.guid);
-            };
-            //subscribeOnce( msg: IPubSubMsg, callback: ( msg: IPubSubMsg, args?: any[] ) => void , args?: any[] ): void {
-            PubSub.prototype.subscribeOnce = function (msg, callback) {
-                //var token = this.subscribe( msg, callback, args );
-                var token = this.subscribe(msg, callback);
-                //Change the behavior of the callback
-                if (this._threads[token.thread]) {
-                    var thread = this._threads[token.thread];
-                    var len = thread.callbacks.length;
-                    while (len--) {
-                        if (thread.callbacks[len].guid === token.guid) {
-                            thread.callbacks[len].once = true;
-                        }
-                    }
-                }
-            };
-            PubSub.prototype.unsubscribe = function (token) {
-                //does the thread exists?
-                if (this._threads[token.thread]) {
-                    var thread = this._threads[token.thread];
-                    var len = thread.callbacks.length;
-                    while (len--) {
-                        if (thread.callbacks[len].guid === token.guid) {
-                            thread.callbacks.splice(len, 1);
-                        }
-                    }
-                }
-            };
-            PubSub.prototype.publish = function (msg) {
-                //journalize the message
-                this._journal.journalise(msg);
-                //treat the message
-                var sThread = core.misc.getObjectClass(msg);
-                if (this._threads[sThread]) {
-                    var oThread = this._threads[sThread];
-                    var len = oThread.callbacks.length;
-                    while (len--) {
-                        //core.Logger.log( "PubSub.BeforeCall - " + JSON.stringify( oThread.callbacks[len].callback ) + "... args:" + JSON.stringify( oThread.callbacks[len].args ));
-                        if (oThread.callbacks[len].args) {
-                            oThread.callbacks[len].callback(msg, oThread.callbacks[len].args);
-                        }
-                        else {
-                            oThread.callbacks[len].callback(msg);
-                        }
-                        if (oThread.callbacks[len].once) {
-                            core.Logger.log("PubSub.RemoveOnceMessages");
-                            oThread.callbacks.splice(len, 1);
-                        }
-                    }
-                }
-            };
-            return PubSub;
-        })();
-        pubsub.PubSub = PubSub;
-    })(pubsub = core.pubsub || (core.pubsub = {}));
-})(core || (core = {}));
-//# sourceMappingURL=/core/core_pubsub.js.map
-var mtg;
-(function (mtg) {
-    var core;
-    (function (core) {
-        core.testTemplate = "";
-    })(core = mtg.core || (mtg.core = {}));
-})(mtg || (mtg = {}));
 
 //# sourceMappingURL=app.js.map

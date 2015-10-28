@@ -1,11 +1,10 @@
-<<<<<<< HEAD
-import * as passport_local from "passport-local";
-import * as libuser from "../shared/user";
-import * as $log from "../services/logger";
+var passport_local = require("passport-local");
+var libuser = require("../shared/user");
+var $log = require("../services/logger");
 var moduleName = "localStratregy - ";
 var strategyOptions = { usernameField: "email" };
-export function login() {
-    return new passport_local.Strategy(strategyOptions, (username, password, done) => {
+function login() {
+    return new passport_local.Strategy(strategyOptions, function (username, password, done) {
         $log.profile("passport-login");
         var qryUser = { email: username };
         libuser.userModel().findOne(qryUser, function (err, dbUser) {
@@ -18,27 +17,7 @@ export function login() {
                 $log.info("login.dbUser does not exists!");
                 return done(null, false, { message: "Wrong email / password" });
             }
-            dbUser.comparePasswords(password, (err, isMatching) => {
-=======
-(function (factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
-    }
-    else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "passport-local", "../shared/user", "../services/logger"], factory);
-    }
-})(function (require, exports) {
-    var passport_local = require("passport-local");
-    var libuser = require("../shared/user");
-    var $log = require("../services/logger");
-    var moduleName = "localStratregy - ";
-    var strategyOptions = { usernameField: "email" };
-    function login() {
-        return new passport_local.Strategy(strategyOptions, function (username, password, done) {
-            $log.profile("passport-login");
-            var qryUser = { email: username };
-            libuser.userModel().findOne(qryUser, function (err, dbUser) {
->>>>>>> origin/master
+            dbUser.comparePasswords(password, function (err, isMatching) {
                 if (err) {
                     $log.error("login.dbUser.comparePasswords error:" + err);
                     return done(err);
@@ -53,11 +32,12 @@ export function login() {
         });
     });
 }
-export function register() {
-    return new passport_local.Strategy(strategyOptions, (username, password, done) => {
+exports.login = login;
+function register() {
+    return new passport_local.Strategy(strategyOptions, function (username, password, done) {
         var userModel = libuser.userModel();
         var qryUser = { email: username };
-        libuser.userModel().findOne(qryUser, (err, dbUser) => {
+        libuser.userModel().findOne(qryUser, function (err, dbUser) {
             if (err) {
                 $log.error("register.findOne error:" + err);
                 return done(err);
@@ -81,5 +61,6 @@ export function register() {
         });
     });
 }
+exports.register = register;
 
-//# sourceMappingURL=localStrategy.js.map
+//# sourceMappingURL=../authentication/localStrategy.js.map

@@ -1,56 +1,14 @@
-<<<<<<< HEAD
-import * as $ from "../services/mtg";
-import * as $usersModel from "../shared/user";
+var $ = require("../services/mtg");
+var $usersModel = require("../shared/user");
 //import $authorization = require("../authorization/authorizationService");
 var moduleName = "usersRoutes@";
 //Create
-export function create(expReq, expRes, next) {
+function create(expReq, expRes, next) {
     $.log.profile(moduleName + "@create");
     var user = $usersModel.userModel();
     var newUser = new user(expReq.body);
     newUser.validate(function (err) {
-        newUser.save((err, user) => {
-=======
-(function (factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
-    }
-    else if (typeof define === 'function' && define.amd) {
-        define(["require", "exports", "../services/mtg", "../shared/user"], factory);
-    }
-})(function (require, exports) {
-    var $ = require("../services/mtg");
-    var $usersModel = require("../shared/user");
-    //import $authorization = require("../authorization/authorizationService");
-    var moduleName = "usersRoutes@";
-    //Create
-    function create(expReq, expRes, next) {
-        $.log.profile(moduleName + "@create");
-        var user = $usersModel.userModel();
-        var newUser = new user(expReq.body);
-        newUser.validate(function (err) {
-            newUser.save(function (err, user) {
-                if (err) {
-                    return expRes.status(500).write({ message: "Error writing job!" });
-                }
-                $.log.debug(moduleName + "@create:\n" + user);
-                $.log.profile(moduleName + "@create");
-                return expRes.status(200).send(user);
-            });
-        });
-    }
-    exports.create = create;
-    ;
-    //find
-    function find(expReq, expRes, next) {
-        $.log.profile(moduleName + "@find");
-        var users = $usersModel.userModel();
-        var qry = {};
-        if (expReq.params.id) {
-            qry = { _id: expReq.params.id };
-        }
-        users.find(qry, function (err, user) {
->>>>>>> origin/master
+        newUser.save(function (err, user) {
             if (err) {
                 return expRes.status(500).write({ message: "Error writing job!" });
             }
@@ -60,16 +18,17 @@ export function create(expReq, expRes, next) {
         });
     });
 }
+exports.create = create;
 ;
 //find
-export function find(expReq, expRes, next) {
+function find(expReq, expRes, next) {
     $.log.profile(moduleName + "@find");
     var users = $usersModel.userModel();
     var qry = {};
     if (expReq.params.id) {
         qry = { _id: expReq.params.id };
     }
-    users.find(qry, (err, user) => {
+    users.find(qry, function (err, user) {
         if (err) {
             return expRes.status(500).write({ message: "Error getting jobs!" });
         }
@@ -79,15 +38,16 @@ export function find(expReq, expRes, next) {
     });
     //}
 }
+exports.find = find;
 ;
 //remove
-export function remove(expReq, expRes, next) {
+function remove(expReq, expRes, next) {
     $.log.profile(moduleName + "@remove");
     var mdlUsers = $usersModel.userModel();
     if (!expReq.params.id) {
         throw new Error("ID parameter is required!");
     }
-    mdlUsers.findByIdAndRemove(expReq.params.id, (err, users) => {
+    mdlUsers.findByIdAndRemove(expReq.params.id, function (err, users) {
         if (err) {
             return expRes.status(500).write({ message: "Error getting users!" });
         }
@@ -95,9 +55,10 @@ export function remove(expReq, expRes, next) {
         expRes.status(200).send(users);
     });
 }
+exports.remove = remove;
 ;
 //update
-export function update(expReq, expRes, next) {
+function update(expReq, expRes, next) {
     $.log.profile(moduleName + "@update");
     var mdlUsers = $usersModel.userModel();
     var userModel = $usersModel.userModel();
@@ -105,7 +66,7 @@ export function update(expReq, expRes, next) {
     if (!expReq.params.id) {
         throw new Error("Is parameter is required!");
     }
-    mdlUsers.findByIdAndUpdate(expReq.params.id, expReq.body, (err, users) => {
+    mdlUsers.findByIdAndUpdate(expReq.params.id, expReq.body, function (err, users) {
         if (err) {
             return expRes.status(500).write({ message: "Error updating user!" });
         }
@@ -113,10 +74,11 @@ export function update(expReq, expRes, next) {
         expRes.status(200).send(users);
     });
 }
+exports.update = update;
 ;
 //findMe
-export function findMe(expReq, expRes, next) {
-    let msg = `${moduleName}@findMe not implemented yet!`;
+function findMe(expReq, expRes, next) {
+    var msg = moduleName + "@findMe not implemented yet!";
     $.log.error(msg);
     return expRes.status(500).write({ message: msg });
     //         var users: $usersModel.IUserModel = $usersModel.userModel();
@@ -137,10 +99,11 @@ export function findMe(expReq, expRes, next) {
     //         });
     //     //}
 }
+exports.findMe = findMe;
 ;
 //updateMe
-export function updateMe(expReq, expRes, next) {
-    let msg = `${moduleName}@updateMe not implemented yet!`;
+function updateMe(expReq, expRes, next) {
+    var msg = moduleName + "@updateMe not implemented yet!";
     $.log.error(msg);
     return expRes.status(500).write({ message: msg });
     //     $.log.profile(moduleName + "@update");
@@ -161,6 +124,7 @@ export function updateMe(expReq, expRes, next) {
     //         expRes.status(200).send(users);
     //     });
 }
+exports.updateMe = updateMe;
 ;
 
-//# sourceMappingURL=usersRoutes.js.map
+//# sourceMappingURL=../users/usersRoutes.js.map
