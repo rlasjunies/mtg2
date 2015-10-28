@@ -1,8 +1,8 @@
-﻿import express = require("express");
-import jwt = require("jwt-simple");
-import moment = require("moment");
-import $configSecret = require("../services/configSecret");
-import $user = require('../shared/user');
+﻿import * as express from "express";
+import * as jwt from "jwt-simple";
+import * as moment from "moment";
+import * as $configSecret from "../services/configSecret";
+import * as $user from '../shared/user';
 export function createSendToken(user:$user.IUserDocument, res:express.Response) {
     var payload = {
         sub: user.id,

@@ -1,6 +1,6 @@
 ﻿///<reference path="../../typings/tsd.d.ts"/>
-import mongoose = require("mongoose");
-import Promise = require("bluebird");
+import * as mongoose from "mongoose";
+import * as Promise from "bluebird";
 
 export interface IPaintModel extends mongoose.Model<IPaintDocument> {
 }

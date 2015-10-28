@@ -2,8 +2,8 @@
 //import Promise = require("bluebird");
 //import $Config = require("./config");
 //import $ConfigSecret = require("./configSecret");
-import $log = require("./logger");
-import $NeDBDataStore = require("nedb");
+import * as $log from "./logger";
+import * as $NeDBDataStore from "nedb";
 
 export var db = new $NeDBDataStore({ filename: '', autoload: true });
 

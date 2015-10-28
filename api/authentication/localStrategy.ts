@@ -1,6 +1,6 @@
-﻿import passport_local = require("passport-local");
-import libuser = require("../shared/user");
-import $log = require("../services/logger");
+﻿import * as passport_local from "passport-local";
+import * as libuser from "../shared/user";
+import * as $log from "../services/logger";
 
 var moduleName = "localStratregy - ";
 var strategyOptions = { usernameField: "email" };
@@ -8,7 +8,7 @@ export function login() {
     return new passport_local.Strategy(strategyOptions, (username, password:string, done) => {
         $log.profile("passport-login");
         var qryUser = { email: username };
-        
+
         libuser.userModel().findOne(qryUser, function (err, dbUser) {
             if (err) {
                 $log.error("login.findOne error:" + err);

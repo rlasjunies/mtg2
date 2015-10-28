@@ -1,8 +1,8 @@
 ﻿///<reference path="../../typings/tsd.d.ts"/>
-import mongoose = require("mongoose");
-import bcrypt = require("bcrypt-nodejs");
+import * as mongoose from "mongoose";
+import * as bcrypt from "bcrypt-nodejs";
 
-// user    
+// user
 export interface IUserDocument extends mongoose.Document {
     //_id: string;
     email: string;

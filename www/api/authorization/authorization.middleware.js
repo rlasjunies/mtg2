@@ -1,94 +1,80 @@
-(function (deps, factory) {
-    if (typeof module === 'object' && typeof module.exports === 'object') {
-        var v = factory(require, exports); if (v !== undefined) module.exports = v;
-    }
-    else if (typeof define === 'function' && define.amd) {
-        define(deps, factory);
-    }
-})(["require", "exports", "../services/mtg", "fs-extra"], function (require, exports) {
-    var $ = require("../services/mtg");
-    var fs = require("fs-extra");
-    var moduleName = "authorizationService@";
-    function checksRole(roles) {
-        return function (req, res, next) {
-            var allowed = false;
-            for (var _i = 0; _i < roles.length; _i++) {
-                var role = roles[_i];
-                if (req.user.allowedRoles.indexOf(role) !== -1) {
-                    allowed = true;
-                }
+import * as $ from "../services/mtg";
+import * as fs from "fs-extra";
+var moduleName = "authorizationService@";
+export function checksRole(roles) {
+    return function (req, res, next) {
+        var allowed = false;
+        for (var role of roles) {
+            if (req.user.allowedRoles.indexOf(role) !== -1) {
+                allowed = true;
+            }
+        }
+        if (!allowed) {
+            var msg = "Not allowed; Missing role:" + roles.concat(",");
+            $.log.info(msg);
+            res.status(403).send({ message: msg });
+        }
+        else {
+            next();
+        }
+    };
+}
+export function checksAccessRight(accessRight) {
+    return function (req, res, next) {
+        var allowed = false;
+        loadAccessRightFromRoles(req.user.allowedRoles, (accessRights) => {
+            //$.log.info(`found:${accessRight} in :[${JSON.stringify(accessRights)}]`)
+            $.log.info("accessRights:" + JSON.stringify(accessRights));
+            $.log.info(`accessRights.indexOf(${accessRight}):` + accessRights.indexOf(accessRight));
+            if (accessRights.indexOf(accessRight) !== -1) {
+                allowed = true;
             }
             if (!allowed) {
-                var msg = "Not allowed; Missing role:" + roles.concat(",");
-                $.log.info(msg);
+                var msg = "Not allowed; Missing accessRight:" + accessRight;
+                $.log.warn(msg);
                 res.status(403).send({ message: msg });
             }
             else {
                 next();
             }
-        };
-    }
-    exports.checksRole = checksRole;
-    function checksAccessRight(accessRight) {
-        return function (req, res, next) {
-            var allowed = false;
-            loadAccessRightFromRoles(req.user.allowedRoles, function (accessRights) {
-                //$.log.info(`found:${accessRight} in :[${JSON.stringify(accessRights)}]`)
-                $.log.info("accessRights:" + JSON.stringify(accessRights));
-                $.log.info(("accessRights.indexOf(" + accessRight + "):") + accessRights.indexOf(accessRight));
-                if (accessRights.indexOf(accessRight) !== -1) {
-                    allowed = true;
-                }
-                if (!allowed) {
-                    var msg = "Not allowed; Missing accessRight:" + accessRight;
-                    $.log.warn(msg);
-                    res.status(403).send({ message: msg });
+        });
+    };
+}
+function loadAccessRightFromRoles(userRoles, callback) {
+    fs.exists($.server.rolesFileName, (isFileExisting) => {
+        if (!isFileExisting) {
+            callback([]);
+        }
+        else {
+            fs.readFile($.server.rolesFileName, "utf8", (err, data) => {
+                if (err) {
+                    callback([]);
                 }
                 else {
-                    next();
-                }
-            });
-        };
-    }
-    exports.checksAccessRight = checksAccessRight;
-    function loadAccessRightFromRoles(userRoles, callback) {
-        fs.exists($.server.rolesFileName, function (isFileExisting) {
-            if (!isFileExisting) {
-                callback([]);
-            }
-            else {
-                fs.readFile($.server.rolesFileName, "utf8", function (err, data) {
-                    if (err) {
-                        callback([]);
-                    }
-                    else {
-                        var accessRights = [];
-                        var fileRoles = JSON.parse(data.slice(1)); //I've got an strange caracter at the beginning => slice it
-                        //concat all the accessright arrays
-                        for (var _i = 0; _i < userRoles.length; _i++) {
-                            var userRole = userRoles[_i];
-                            var fileRole = void 0;
-                            $.log.debug("userrole:" + userRole);
-                            for (var _a = 0; _a < fileRoles.length; _a++) {
-                                var tmpFileRole = fileRoles[_a];
-                                if (tmpFileRole.id == userRole) {
-                                    fileRole = tmpFileRole;
-                                }
-                            }
-                            if (fileRole) {
-                                accessRights = accessRights.concat(fileRole.accessrights);
-                            }
-                            else {
-                                $.log.error("Unknown role:" + userRole);
+                    let accessRights = [];
+                    let fileRoles = JSON.parse(data.slice(1)); //I've got an strange caracter at the beginning => slice it
+                    //concat all the accessright arrays
+                    for (let userRole of userRoles) {
+                        let fileRole;
+                        $.log.debug(`userrole:${userRole}`);
+                        for (let tmpFileRole of fileRoles) {
+                            if (tmpFileRole.id == userRole) {
+                                fileRole = tmpFileRole;
                             }
                         }
-                        $.log.info("accessright: " + accessRights.toString() + " \n allowed for:" + userRoles);
-                        callback(accessRights);
+                        if (fileRole) {
+                            accessRights = accessRights.concat(fileRole.accessrights);
+                        }
+                        else {
+                            $.log.error(`Unknown role:${userRole}`);
+                        }
                     }
-                });
-            }
-        });
-    }
-});
+                    $.log.info(`accessright: ${accessRights.toString()} \n allowed for:${userRoles}`);
+                    callback(accessRights);
+                }
+            });
+        }
+    });
+}
 
 //# sourceMappingURL=../authorization/authorization.middleware.js.map

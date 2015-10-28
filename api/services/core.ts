@@ -1,6 +1,6 @@
-﻿import $Config = require("./config");
-import $ConfigSecret = require("./configSecret");
-import $log = require("./logger");
+﻿import * as $Config from "./config";
+import * as $ConfigSecret from "./configSecret";
+import * as $log from "./logger";
 //import $db = require("./db.nedb");
 
 export var log = $log;

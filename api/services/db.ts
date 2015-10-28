@@ -1,8 +1,8 @@
-﻿import mongoose = require("mongoose");
-import Promise = require("bluebird");
-import $Config = require("./config");
-import $ConfigSecret = require("./configSecret");
-import $log = require("./logger");
+﻿import * as mongoose from "mongoose";
+import * as Promise from "bluebird";
+import * as $Config from "./config";
+import * as $ConfigSecret from "./configSecret";
+import * as $log from "./logger";
 
 export interface IDb {
     test(): void;

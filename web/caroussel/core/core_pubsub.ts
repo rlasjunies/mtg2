@@ -26,9 +26,9 @@
 //      is it really usefull in really application (currently the remark is posted related to the test framework)
 //
 module core {
-    export module pubsub { 
+    export module pubsub {
     export interface IPubSubMsg {
-    } 
+    }
     export interface IPubSubEvt_FunctionReturn {
         status: core.misc.enumEntityStatus;
         value: any;
@@ -56,12 +56,12 @@ module core {
     }
 
     export class PubSub {
-        private _journal: models.journal.Journal;
+        //private _journal: models.journal.Journal;
         private _threads: Thread[] = [];
         //        subscribe( msg: IPubSubMsg, callback: ( msg: IPubSubMsg, args?: any[] ) => void , args?: any[]  ): PubSubToken {
 
         constructor() {
-            this._journal = new models.journal.Journal();
+            //this._journal = new models.journal.Journal();
         }
 
         /**
@@ -119,11 +119,11 @@ module core {
                     }
                 }
             }
-        }          
+        }
 
         publish( msg: IPubSubMsg ) {
             //journalize the message
-            this._journal.journalise( msg );
+            //this._journal.journalise( msg );
 
             //treat the message
             var sThread = core.misc.getObjectClass(msg);
@@ -139,7 +139,7 @@ module core {
                         oThread.callbacks[len].callback(msg);
                     }
                     if (oThread.callbacks[len].once) {
-                        core.Logger.log("PubSub.RemoveOnceMessages")
+                        //core.Logger.log("PubSub.RemoveOnceMessages")
                         oThread.callbacks.splice(len, 1);
                     }
                 }

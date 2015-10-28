@@ -1,0 +1,1 @@
+I add in this folder to share/transfer my personal setting, snippets, configuration.

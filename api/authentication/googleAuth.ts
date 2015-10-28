@@ -1,12 +1,10 @@
-﻿import express = require("express");
-// import mongoose = require("mongoose");
+﻿import * as express from "express";
+import * as ts from "./google.typesafe";
 
-import ts = require("./google.typesafe");
-
-import libRequest = require("request");
-import libUser = require("../shared/user");
-import libToken = require("./token");
-import $ConfigSecret = require("../services/configSecret");
+import * as libRequest from "request";
+import * as libUser from "../shared/user";
+import * as libToken from "./token";
+import * as $ConfigSecret from "../services/configSecret";
 
 interface IGoogleProfile {
     sub: string; // GoogleID

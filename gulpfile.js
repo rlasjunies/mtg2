@@ -1,3 +1,5 @@
+/// <reference path="./typings/tsd.d.ts" />
+
 var inject = require("gulp-inject");
 var gulp = require("gulp");
 var ts = require("gulp-typescript");
@@ -21,7 +23,7 @@ var config = {
         api:{
             tsApiFiles: "./api/**/*.ts",
             tsApiOutputPath: "./www/api",
-        },   
+        },
         typings: {
             folder: "./typings",
             tsDefinitions: "./typings/**/*.d.ts",
@@ -30,7 +32,7 @@ var config = {
         },
         images:{
             source: "./images/*.*",
-            destination: "./www/images"            
+            destination: "./www/images"
         },
         styles:{
             lessFiles: "./styles/*.less",
@@ -42,18 +44,21 @@ var config = {
     },
     tscConfWeb: {
         target: "ES5",
-        module: "umd",
+        //module: "umd",
         declarationFiles: false,
         noExternalResolve: true,
-        out: "app.js",
-        typescript: require('ntypescript') 
+        outFile: "app.js",
+        //typescript: require('ntypescript')
+        //typescript: require('typescript') //Force the usage of the local installed TSC?
     },
     tscConfApi: {
-        target: "ES5",
+        target: "ES6",
         module: "umd",
         declarationFiles: false,
         noExternalResolve: true,
-        typescript: require('ntypescript') 
+        //noLib: true
+        //typescript: require('ntypescript')
+        typescript: require('typescript') //Force the usage of the local installed TSC?
     }
 };
 
@@ -61,9 +66,10 @@ gulp.task("build", ["webCompile", "apiCompile"]);
 gulp.task("lint",["webLink","apiLint"]);
 
 gulp.task("watchWeb", function () {
-    gulp.watch([config.paths.web.tsWebFiles, 
+    gulp.watch([
+        config.paths.web.tsWebFiles,
         config.paths.web.htmlFiles,
-        config.paths.web.htmlWebTemplateFiles], [  "html2ts", "webCompile" ]);
+        config.paths.web.htmlWebTemplateFiles ],[ "html2ts", "webCompile" ]);
 });
 gulp.task("watchApi", function () {
     gulp.watch([config.paths.api.tsApiFiles], [ "apiCompile", "apiLint" ]);
@@ -81,29 +87,29 @@ gulp.task("apiLint", function () {
 
 gulp.task("webCompile", function () {
     var sourceTsFiles = [
-        "./web/_references.ts", 
+        "./web/_references.ts",
         config.paths.web.tsWebFiles,
         config.paths.typings.tsDefinitions,
         config.paths.typings.appDefinition]; //reference to app.d.ts files
-    
+
     var tsResult = gulp.src(sourceTsFiles)
         .pipe(sourcemaps.init())
         .pipe(ts(config.tscConfWeb));
-    
+
     tsResult.dts.pipe(gulp.dest(config.paths.web.webOutputPath));
-        
+
     tsResult.js
         .pipe(sourcemaps.write("."))
         .pipe(gulp.dest(config.paths.web.webOutputPath));
-        
-    return gulp.src(config.paths.web.htmlFiles) //TODO inject app or minified version of app.js, remove sideNav.html to directive or something like that 
+
+    return gulp.src(config.paths.web.htmlFiles) //TODO inject app or minified version of app.js, remove sideNav.html to directive or something like that
         .pipe(gulp.dest(config.paths.web.webOutputPath));
 });
 
 gulp.task("apiCompile", function    () {
     var sourceTsFiles = [
         config.paths.typings.tsDefinitions,
-        config.paths.api.tsApiFiles]; 
+        config.paths.api.tsApiFiles];
     var tsResult = gulp.src(sourceTsFiles)
         .pipe(sourcemaps.init())
         .pipe(ts(config.tscConfApi));
@@ -125,12 +131,12 @@ gulp.task("cleanAllJs", function (cb) {
 });
 
 gulp.task("html2ts", function(){
-    
-    var myTemplapte = { 
+
+    var myTemplapte = {
         tsTemplate:"namespace mtg.$folderName { export var $fileNameTemplate = \"$fileContent\";}",
         fileSrcType: ".htm"
     };
-    
+
     return gulp.src(config.paths.web.htmlWebTemplateFiles)
         .pipe(html2ts(myTemplapte))
         .pipe(gulp.dest("./web/"));
@@ -184,15 +190,15 @@ gulp.task('start:mongodb', function (cb) {
     // cb(err);
   // });
   //exec(['"c:\\program files\\MongoDB 2.6 Standard\\bin\\mongod" --dbpath C:\\Dev\\mongodb --rest'], function (err, stdout, stderr) {
-  exec(["mongod --dbpath C:\\Dev\\mongodb --rest"], function (err, stdout, stderr) {
+  exec("\"c:\\program files\\MongoDB 2.6 Standard\\bin\\mongod.exe\" --dbpath C:\\Dev\\mongodb --rest", function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);
   });
 });
 
-gulp.task('start:server', function (cb) {
-  exec(["node ./www/api/server.js"], function (err, stdout, stderr) {
+gulp.task("start:server", function (cb) {
+  exec("node --harmony ./www/api/server.js", function (err, stdout, stderr) {
     console.log(stdout);
     console.log(stderr);
     cb(err);

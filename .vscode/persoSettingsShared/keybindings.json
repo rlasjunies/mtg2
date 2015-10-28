@@ -1,0 +1,23 @@
+// Place your key bindings in this file to overwrite the defaults
+[
+	{
+		"key": "alt+z i",
+		"command": "workbench.action.zoomIn"
+	},
+	{
+		"key": "alt+z o",
+		"command": "workbench.action.zoomOut"
+	},
+	{
+		"key": "alt+b",
+		"command": "editor.action.jumpToBracket"
+	},
+	{
+		"key": "alt+t r",
+		"command": "workbench.action.tasks.runTask"
+	},
+	{
+		"key": "alt+t x",
+		"command": "workbench.action.tasks.terminate"
+	}
+]

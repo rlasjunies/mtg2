@@ -1,8 +1,6 @@
-﻿import e = require("express");
-
-import $log = require("../services/logger");
-
-import $paintsModel = require("../shared/paints");
+﻿import * as e from "express";
+import * as $log from "../services/logger";
+import * as $paintsModel from "../shared/paints";
 
 var moduleName = "paintsRoutes@";
 

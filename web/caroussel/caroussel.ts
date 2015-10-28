@@ -16,6 +16,7 @@ namespace caroussel {
         width?: number;
         ArrowUP?: IArrowParam;
         ArrowDOWN?: IArrowParam;
+        thumbnailWidth?: number;
     }
 
     export enum enumViewerDetail_visibility {
@@ -47,6 +48,7 @@ namespace caroussel {
         width?: number;
         caroussel?: ICarrouselParam;
         imageviewer?: IImageViewerParam;
+        padding?:number;
     }
 
     export interface IGalleryItem {
@@ -121,7 +123,7 @@ namespace caroussel {
 
             $imgDetailsHTML.css( "top", parseInt(this.$me.css( "top" ).replace("px","") ));
             $imgDetailsHTML.css( "left", parseInt(this.$me.css('left').replace('px','')) + this.$me.width() - this.DEFAULT_SETTINGS.viewerDetail.width );
-            $imgDetailsHTML.width( this.DEFAULT_SETTINGS.width  );                                                       
+            $imgDetailsHTML.width( this.DEFAULT_SETTINGS.width  );
             $imgDetailsHTML.height( this.DEFAULT_SETTINGS.height );
         }
 
@@ -140,9 +142,12 @@ namespace caroussel {
         }
     }
 
+    interface JQueryKinetic extends JQuery{
+        kinetic?: (command?:string, options?:any)=> {};
+    }
     export class Carrousel {
         $me: JQuery;
-        $roller: JQuery
+        $roller: JQueryKinetic
         private DEFAULT_SETTINGS: ICarrouselParam;
 
         constructor( $caroussel: JQuery, param?: ICarrouselParam ) {
@@ -227,7 +232,7 @@ namespace caroussel {
             this.$roller.height( this.DEFAULT_SETTINGS.height );
             this.$roller.width( this.DEFAULT_SETTINGS.width );
 
-            $ArrowUP.on( 'mousedown', ( evt: JQueryEventObject ) => {                
+            $ArrowUP.on( 'mousedown', ( evt: JQueryEventObject ) => {
                 this.$roller.kinetic( "start", { velocityY: -10 });
             });
 
@@ -293,7 +298,7 @@ namespace caroussel {
             //if ( item.thumbnailwidth == undefined ) item.thumbnailwidth = this.DEFAULT_SETTINGS.thumbnailWidth;
 
             var $img = $( "<img id ='" + core.misc.GUID_new() + "' class ='carousselItem' style='visibility:hidden;' src='" + item.thumbnailUrl + "'/>" );
-            fitImageInContainer( $img, 150, 150, enumImageResizeMode.fit_vh );
+            core.image.fitImageInContainer( $img, 150, 150, core.image.enumImageResizeMode.fit_vh );
             $img.css( "visibility", "visible" );
             $img.on( 'click', ( evt: JQueryEventObject ) => {
                 this.imageViewer.source( item.PictureUrl );
@@ -306,11 +311,11 @@ namespace caroussel {
         }
 
         clearItems() {
-            //delete all the items in the roller           
+            //delete all the items in the roller
             this.caroussel.$roller.empty();
         }
 
-        selectFirstItem() {                                      
+        selectFirstItem() {
             //console.log( "id img:" + this.$roller.find( ":first-child" ).attr( "id" ) );
             this.caroussel.$roller.find( ":first-child").trigger( 'click' );
         }

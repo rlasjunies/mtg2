@@ -1,5 +1,5 @@
-﻿import $log = require("./logger");
-import stringPolyFill = require("./string+");
+﻿import * as $log from "./logger";
+import * as stringPolyFill from "./string+";
 
 class Server{
     rootPath: string;

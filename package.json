@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "gulpfile.js",
-  "dependencies": {},
+  "dependencies": {
+    "nedb": "^1.2.1"
+  },
   "devDependencies": {
     "chance": "^0.7.1",
     "del": "^1.2.0",

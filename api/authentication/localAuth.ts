@@ -1,14 +1,14 @@
-﻿import express = require("express");
-import jwt = require("jwt-simple"); 
-import moment = require("moment");
+﻿import * as express from "express";
+import * as jwt from "jwt-simple";
+import * as moment from "moment";
 
-import $Token = require("./token");
-import $EmailVerification = require("./emailVerification");
-import $log = require("../services/logger");
-import $configSecret = require("../services/configSecret");
+import * as $Token from "./token";
+import * as $EmailVerification from "./emailVerification";
+import * as $log from "../services/logger";
+import * as $configSecret from "../services/configSecret";
 
-import $ = require("../services/mtg");
-import $usersModel = require("../shared/user");
+import * as $ from "../services/mtg";
+import * as $usersModel from "../shared/user";
 
 var moduleName = "localAuth";
 

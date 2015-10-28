@@ -1,8 +1,6 @@
-﻿import e = require("express");
-
-import $ = require("../services/mtg");
-
-import $usersModel = require("../shared/user");
+﻿import * as e from "express";
+import * as $ from "../services/mtg";
+import * as $usersModel from "../shared/user";
 //import $authorization = require("../authorization/authorizationService");
 
 var moduleName = "usersRoutes@";
@@ -93,17 +91,17 @@ export function findMe(expReq: e.xRequest<e.IRouteParamId>, expRes: e.Response, 
     return expRes.status(500).write({ message: msg });
 
 //         var users: $usersModel.IUserModel = $usersModel.userModel();
-// 
+//
 //         var qry = {};
 //         //if (expReq.params.id) {
 //             qry = { _id: expReq.user.id };
 //         //}
-// 
+//
 //         users.find(qry,(err, user) => {
 //             if (err) {
 //                 return expRes.status(500).write({ message: "Error getting jobs!" });
 //             }
-// 
+//
 //             $.log.debug("expReq.params.id:" + expReq.params.id);
 //             $.log.profile(moduleName + "@find");
 //             expRes.status(200).send(user);
@@ -122,16 +120,16 @@ export function updateMe(expReq: e.xRequest<e.IRouteParamId>, expRes: e.Response
 //     var mdlUsers: $usersModel.IUserModel = $usersModel.userModel();
 //     var userModel = $usersModel.userModel();
 //     var newUser = new userModel(expReq.body);
-// 
+//
 //     if (!expReq.params.id) {
 //         throw new Error("Is parameter is required!");
 //     }
-// 
+//
 //     mdlUsers.findByIdAndUpdate(expReq.params.id, expReq.body, (err, users) => {
 //         if (err) {
 //             return expRes.status(500).write({ message: "Error updating user!" });
 //         }
-// 
+//
 //         $.log.profile(moduleName + "@update");
 //         expRes.status(200).send(users);
 //     });

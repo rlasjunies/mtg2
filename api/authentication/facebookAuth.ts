@@ -1,10 +1,10 @@
-﻿import qs = require("querystring");
-import request = require("request");
-import express = require("express");
+﻿import * as qs from "querystring";
+import * as request from "request";
+import * as express from "express";
 
-import $ConfigSecret = require("../services/configSecret");
-import libUser = require("../shared/user");
-import libToken = require("./token");
+import * as $ConfigSecret from "../services/configSecret";
+import * as libUser from "../shared/user";
+import * as libToken from "./token";
 
 interface IFacebookProfile {
     id: string;
@@ -44,7 +44,7 @@ export function facebookAuth (expReq: express.Request, expRes:express.Response) 
 
                     newUser.facebookId = profile.id;
                     newUser.displayName = profile.name;
-                    // TODO pretty sure it"s not good to store only these information, what"s happen if the SAME user 
+                    // TODO pretty sure it"s not good to store only these information, what"s happen if the SAME user
                     // login with goodle or local authentication?
                     newUser.save<libUser.IUserDocument>((err, resp) => {
                         if (err) {

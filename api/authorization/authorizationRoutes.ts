@@ -1,15 +1,15 @@
-﻿import e = require("express");
-import fs = require("fs-extra");
-import $ = require("../services/mtg");
-import path = require("path");
- 
+﻿import * as e from "express";
+import * as fs from "fs-extra";
+import * as $ from "../services/mtg";
+import * as  path from "path";
+
 var moduleName = "authorizationRoutes@";
 
 export function getAllRoles(expReq: e.xRequest<e.IRouteParamId>, expRes: e.Response, next:Function) {
     //TODO refactor the code to provide a generic file function and share it with hasRole function ...
     var sourceFile = $.server.rolesFileName;
     $.log.info("read roles file:" + sourceFile);
-    
+
     fs.exists(sourceFile,(isFileExisting: boolean) => {
         if (!isFileExisting) {
             expRes

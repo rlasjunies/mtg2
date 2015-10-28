@@ -1,8 +1,8 @@
-﻿import e = require("express");
-import formidable = require("formidable");
-import fs = require("fs-extra");
-import $ = require("../services/mtg");
-import path = require("path");
+﻿import * as e from "express";
+import * as formidable from "formidable";
+import * as fs from "fs-extra";
+import * as $ from "../services/mtg";
+import * as path from "path";
 
 //path.dirname()
 

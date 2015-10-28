@@ -274,7 +274,7 @@ declare module gulp {
          * @param fn a callback or array of callbacks to be called on each change.
          */
         watch(glob:string, opt:IWatchOptions, fn:IWatchCallback): EventEmitter;
-        watch(glob:string, opt:IWatchOptions, fn:IWatchCallback[]): EventEmitter;
+        watch(glob:string, opt:IWatchOptions,  fn:IWatchCallback[]): EventEmitter;
     }
 }
 

@@ -1,15 +1,15 @@
 ﻿///< reference path="../typings/tsd.d.ts"/>
-import e = require("express");
-import _ = require("underscore");
-import jwt = require("jwt-simple");
-import fs = require("fs");
-import nodemailer = require("nodemailer");
-import nodemailer_smtp_transport = require("nodemailer-smtp-transport");
+import * as e from "express";
+import * as _ from "underscore";
+import * as jwt from "jwt-simple";
+import * as fs from  "fs";
+import * as nodemailer from "nodemailer";
+import * as nodemailer_smtp_transport from "nodemailer-smtp-transport";
 
-import $ConfigSecret = require("../services/configSecret");
-import $Config = require("../services/config");
-import xUser = require("../shared/user");
-import $ = require("../services/mtg");
+import * as $ConfigSecret from "../services/configSecret";
+import * as $Config from "../services/config";
+import * as xUser from "../shared/user";
+import * as $ from "../services/mtg";
 
 // import smtpTransport = require("nodemailer-smtp-transport");
 
@@ -30,9 +30,9 @@ export function send(email:string, res:e.Response) {
     };
 
     var token = jwt.encode(payload, $ConfigSecret.EMAIL_SECRET);
-    
+
     //var nSMTPTransportOptions: NodemailerSMTPTransportOptions = {
-    
+
     let nSMTPTransportOptions: nodemailer_smtp_transport.SmtpOptions = {
         service: "Gmail",
         auth: {
